@@ -1,0 +1,35 @@
+{
+  "name": "previous-date-range",
+  "version": "0.0.2",
+  "description": "Calculate a date range in the past from a certain moment",
+  "main": "previous-date-range.js",
+  "scripts": {
+    "prepublish": "node_modules/.bin/coffee -c previous-date-range.coffee",
+    "build": "node_modules/.bin/coffee -c previous-date-range.coffee",
+    "watch": "node_modules/.bin/coffee -w -c previous-date-range.coffee",
+    "test": "node_modules/.bin/mocha --compilers coffee:coffee-script/register -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamiter/previous-date-range.git"
+  },
+  "keywords": [
+    "moment",
+    "date",
+    "previous"
+  ],
+  "author": "Michiel ter Reehorst",
+  "license": "UNLICENSE",
+  "bugs": {
+    "url": "https://github.com/jamiter/previous-date-range/issues"
+  },
+  "homepage": "https://github.com/jamiter/previous-date-range",
+  "dependencies": {
+    "moment": "^2.6.0"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "coffee-script": "^1.7.1",
+    "mocha": "^1.18.2"
+  }
+}
