@@ -1,4 +1,4 @@
-moment = require 'moment'
+moment = @moment or require 'moment'
 
 class PreviousDateRange
 

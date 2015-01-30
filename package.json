@@ -4,7 +4,7 @@
   "description": "Calculate a date range in the past from a certain moment",
   "main": "previous-date-range.js",
   "scripts": {
-    "prepublish": "node_modules/.bin/coffee -c previous-date-range.coffee",
+    "prepublish": "npm run build",
     "build": "node_modules/.bin/coffee -c previous-date-range.coffee",
     "watch": "node_modules/.bin/coffee -w -c previous-date-range.coffee",
     "test": "node_modules/.bin/mocha --compilers coffee:coffee-script/register -R spec"
