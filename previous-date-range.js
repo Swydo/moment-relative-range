@@ -87,6 +87,10 @@
 
   })();
 
-  module.exports = PreviousDateRange;
+  if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
+    module.exports = PreviousDateRange;
+  } else {
+    this.PreviousDateRange = PreviousDateRange;
+  }
 
 }).call(this);
