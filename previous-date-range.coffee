@@ -48,4 +48,7 @@ class PreviousDateRange
       json[attr] = @[attr]
     json
 
-module.exports = PreviousDateRange
+if module?.exports?
+  module.exports = PreviousDateRange
+else
+  @PreviousDateRange = PreviousDateRange
