@@ -2,7 +2,7 @@ moment = @moment or require 'moment'
 
 class PreviousDateRange
 
-  @attributes: ['measure', 'units']
+  @attributes: ['measure', 'units', 'whole']
 
   constructor: (data) ->
     @set data
@@ -16,8 +16,13 @@ class PreviousDateRange
   setDefaults: ->
     @measure ?= 'month'
     @units ?= 1
+    @whole ?= true
 
-  previous: (@units, @measure) ->
+  previous: (@units, @measure, whole) ->
+    if whole?
+      @whole = whole
+
+    @setDefaults()
 
   getRange: (options = {}) ->
     end = @getEnd options.startingFrom
@@ -29,15 +34,28 @@ class PreviousDateRange
     length: length
 
   getEnd: (fromDate) ->
-    moment fromDate
-    .startOf @measure
-    .subtract 1, 'day'
-    .endOf @measure
+    end = moment fromDate
+
+    if not @whole
+      end
+        .subtract 1, 'day'
+    else
+      end
+        .startOf @measure
+        .subtract 1, 'day'
+        .endOf @measure
 
   getStart: (compareToDate) ->
-    moment compareToDate
-    .subtract @units-1, @getCountableMeasure()
-    .startOf @measure
+    end = moment compareToDate
+    
+    if not @whole
+      end
+        .subtract @units, @getCountableMeasure()
+        .add 1, 'day'
+    else
+      end
+        .subtract @units-1, @getCountableMeasure()
+        .startOf @measure
 
   getCountableMeasure: ->
     if @measure is 'isoWeek' then 'week' else @measure

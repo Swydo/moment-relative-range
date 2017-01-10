@@ -3,11 +3,11 @@ expect = chai.expect
 
 moment = require 'moment'
 
-describe 'Scheduling Range', ->
+describe 'PreviousDateRange', ->
 
   beforeEach ->
     @format = 'DD-MM-YYYY'
-    @date = new Date 3000, 0, 1
+    @date = new Date 3000, 1, 12
 
     Range = require '../previous-date-range'
     @range = new Range
@@ -55,41 +55,85 @@ describe 'Scheduling Range', ->
       range = @range.getRange()
       expect(typeof range.length).to.equal 'number'
 
-    it 'should return the length in days', ->
-      @range.previous 2, 'week'
+    describe 'whole', ->
+      it 'should return the length in days', ->
+        @range.previous 2, 'week'
 
-      range = @range.getRange startingFrom: @date
+        range = @range.getRange startingFrom: @date
 
-      expect(range.length).to.equal 14
+        expect(range.length).to.equal 14
 
-    it 'about the previous 2 months', ->
-      @range.previous 2, 'month'
+      it 'about the previous 2 months', ->
+        @range.previous 2, 'month'
 
-      range = @range.getRange startingFrom: @date
+        range = @range.getRange startingFrom: @date
 
-      expect(range.start.format(@format), 'start date').to.equal '01-11-2999'
-      expect(range.end.format(@format), 'end date').to.equal '31-12-2999'
+        expect(range.start.format(@format), 'start date').to.equal '01-12-2999'
+        expect(range.end.format(@format), 'end date').to.equal '31-01-3000'
 
-    it 'about the previous ISO week', ->
-      @range.previous 1, 'isoWeek'
+      it 'about the previous ISO week', ->
+        @range.previous 1, 'isoWeek'
 
-      range = @range.getRange startingFrom: @date
+        range = @range.getRange startingFrom: @date
 
-      expect(range.start.isoWeekday()).to.equal 1
-      expect(range.end.isoWeekday()).to.equal 7
+        expect(range.start.isoWeekday()).to.equal 1
+        expect(range.end.isoWeekday()).to.equal 7
 
-      expect(range.start.date(), 'start date').to.equal 23
-      expect(range.end.date(), 'end date').to.equal 29
+        expect(range.start.date(), 'start date').to.equal 3
+        expect(range.end.date(), 'end date').to.equal 9
 
-    it 'about the previous 4 days', ->
-      @range.previous 4, 'day'
+      it 'about the previous 4 days', ->
+        @range.previous 4, 'day'
 
-      range = @range.getRange startingFrom: @date
+        range = @range.getRange startingFrom: @date
 
-      # Day of the week
-      expect(range.start.day()).to.equal 6
-      expect(range.end.day()).to.equal 2
+        # Day of the week
+        expect(range.start.day()).to.equal 6
+        expect(range.end.day()).to.equal 2
 
-      # Date of the month
-      expect(range.start.date(), 'start date').to.equal 28
-      expect(range.end.date(), 'end date').to.equal 31
+        # Date of the month
+        expect(range.start.date(), 'start date').to.equal 8
+        expect(range.end.date(), 'end date').to.equal 11
+        
+    describe 'non whole', ->
+      beforeEach ->
+        @range.whole = false
+
+      it 'should return the length in days', ->
+        @range.previous 2, 'week'
+
+        range = @range.getRange startingFrom: @date
+
+        expect(range.length).to.equal 14
+
+      it 'about the previous 2 months', ->
+        @range.previous 2, 'month'
+
+        range = @range.getRange startingFrom: @date
+
+        expect(range.start.format(@format), 'start date').to.equal '12-12-2999'
+        expect(range.end.format(@format), 'end date').to.equal '11-02-3000'
+
+      it 'about the previous ISO week', ->
+        @range.previous 1, 'isoWeek'
+
+        range = @range.getRange startingFrom: @date
+
+        expect(range.start.isoWeekday()).to.equal 3
+        expect(range.end.isoWeekday()).to.equal 2
+
+        expect(range.start.date(), 'start date').to.equal 5
+        expect(range.end.date(), 'end date').to.equal 11
+
+      it 'about the previous 4 days', ->
+        @range.previous 4, 'day'
+
+        range = @range.getRange startingFrom: @date
+
+        # Day of the week
+        expect(range.start.day()).to.equal 6
+        expect(range.end.day()).to.equal 2
+
+        # Date of the month
+        expect(range.start.date(), 'start date').to.equal 8
+        expect(range.end.date(), 'end date').to.equal 11
