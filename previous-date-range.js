@@ -5,7 +5,7 @@
   moment = this.moment || require('moment');
 
   PreviousDateRange = (function() {
-    PreviousDateRange.attributes = ['measure', 'units'];
+    PreviousDateRange.attributes = ['measure', 'units', 'whole'];
 
     function PreviousDateRange(data) {
       this.set(data);
@@ -31,12 +31,20 @@
       if (this.measure == null) {
         this.measure = 'month';
       }
-      return this.units != null ? this.units : this.units = 1;
+      if (this.units == null) {
+        this.units = 1;
+      }
+      this.toDate = /ToDate$/.test(this.measure);
+      return this.whole = !this.toDate;
     };
 
-    PreviousDateRange.prototype.previous = function(_at_units, _at_measure) {
+    PreviousDateRange.prototype.previous = function(_at_units, _at_measure, whole) {
       this.units = _at_units;
       this.measure = _at_measure;
+      this.setDefaults();
+      if (whole != null) {
+        return this.whole = whole;
+      }
     };
 
     PreviousDateRange.prototype.getRange = function(options) {
@@ -55,18 +63,41 @@
     };
 
     PreviousDateRange.prototype.getEnd = function(fromDate) {
-      return moment(fromDate).startOf(this.measure).subtract(1, 'day').endOf(this.measure);
+      var end;
+      end = moment(fromDate);
+      if (!this.whole) {
+        return end.subtract(1, 'day');
+      } else {
+        return end.startOf(this.getCleanMeasure()).subtract(1, 'day').endOf(this.getCleanMeasure());
+      }
     };
 
     PreviousDateRange.prototype.getStart = function(compareToDate) {
-      return moment(compareToDate).subtract(this.units - 1, this.getCountableMeasure()).startOf(this.measure);
+      var end;
+      end = moment(compareToDate);
+      if (!this.whole) {
+        end.subtract(this.units, this.getCountableMeasure());
+        if (this.toDate) {
+          end.endOf(this.getCleanMeasure());
+        }
+        return end.add(1, 'day');
+      } else {
+        return end.subtract(this.units - 1, this.getCountableMeasure()).startOf(this.getCleanMeasure());
+      }
+    };
+
+    PreviousDateRange.prototype.getCleanMeasure = function() {
+      return this.measure.replace('ToDate', '');
     };
 
     PreviousDateRange.prototype.getCountableMeasure = function() {
-      if (this.measure === 'isoWeek') {
-        return 'week';
-      } else {
-        return this.measure;
+      var cleanMeasure;
+      cleanMeasure = this.getCleanMeasure();
+      switch (cleanMeasure) {
+        case 'isoWeek':
+          return 'week';
+        default:
+          return cleanMeasure;
       }
     };
 
