@@ -7,7 +7,7 @@
     "prepublish": "npm run build",
     "build": "node_modules/.bin/coffee -c previous-date-range.coffee",
     "watch": "node_modules/.bin/coffee -w -c previous-date-range.coffee",
-    "test": "node_modules/.bin/mocha --compilers coffee:coffee-script/register -R spec"
+    "test": "node_modules/.bin/mocha -R spec"
   },
   "repository": {
     "type": "git",
