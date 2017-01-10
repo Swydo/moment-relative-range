@@ -155,9 +155,9 @@ describe('PreviousDateRange', function() {
       });
 
       it('isoWeekToDate', function() {
-        var range;
-        this.range.previous(1, 'isoWeekToDate');
-        range = this.range.getRange({
+        this.range.measure = 'isoWeekToDate';
+        
+        var range = this.range.getRange({
           startingFrom: this.date
         });
         expect(range.start.format(this.format), 'start date').to.equal('10-02-3000');
@@ -165,9 +165,9 @@ describe('PreviousDateRange', function() {
       });
 
       it('monthToDate', function() {
-        var range;
-        this.range.previous(1, 'monthToDate');
-        range = this.range.getRange({
+        this.range.measure = 'monthToDate';
+        
+        var range = this.range.getRange({
           startingFrom: this.date
         });
         expect(range.start.format(this.format), 'start date').to.equal('01-02-3000');

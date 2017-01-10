@@ -6,22 +6,13 @@ class PreviousDateRange
 
   constructor: (data) ->
     @set data
-    @setDefaults()
 
   set: (data = {}) ->
     for attr in @constructor.attributes when data[attr]?
       @[attr] = data[attr]
     this
 
-  setDefaults: ->
-    @measure ?= 'month'
-    @units ?= 1
-    @toDate = /ToDate$/.test @measure
-    @whole = not @toDate
-
   previous: (@units, @measure, whole) ->
-    @setDefaults()
-
     if whole?
       @whole = whole
 
@@ -42,42 +33,54 @@ class PreviousDateRange
         .subtract 1, 'day'
     else
       end
-        .startOf @getCleanMeasure()
+        .startOf @cleanMeasure
         .subtract 1, 'day'
-        .endOf @getCleanMeasure()
+        .endOf @cleanMeasure
 
   getStart: (compareToDate) ->
     end = moment compareToDate
     
     if not @whole
-      end.subtract @units, @getCountableMeasure()
+      end.subtract @units, @countableMeasure
 
       if @toDate
-        end.endOf @getCleanMeasure()
+        end.endOf @cleanMeasure
 
       end.add 1, 'day'
     else
       end
-        .subtract @units-1, @getCountableMeasure()
-        .startOf @getCleanMeasure()
-
-  getCleanMeasure: ->
-    @measure.replace('ToDate', '')
-
-  getCountableMeasure: ->
-    cleanMeasure = @getCleanMeasure()
-
-    switch cleanMeasure
-      when 'isoWeek'
-        'week'
-      else
-        cleanMeasure
+        .subtract @units-1, @countableMeasure
+        .startOf @cleanMeasure
 
   toJSON: ->
     json = {}
     for attr in @constructor.attributes when @[attr]?
       json[attr] = @[attr]
     json
+
+# Use getters and setters to add default values and update `toDate` value
+
+Object.defineProperty PreviousDateRange.prototype, 'units',
+  get: -> @_units or 1
+  set: (val) -> @_units = val
+
+Object.defineProperty PreviousDateRange.prototype, 'measure',
+  get: -> @_measure or 'month'
+  set: (val) ->
+    @_measure = val
+    @toDate = /ToDate$/.test @measure
+    @whole = not @toDate
+
+Object.defineProperty PreviousDateRange.prototype, "cleanMeasure",
+  get: -> @measure.replace('ToDate', '')
+
+Object.defineProperty PreviousDateRange.prototype, "countableMeasure",
+  get: ->
+    switch @cleanMeasure
+      when 'isoWeek'
+        'week'
+      else
+        @cleanMeasure
 
 if module?.exports?
   module.exports = PreviousDateRange
