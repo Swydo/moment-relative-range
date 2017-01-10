@@ -6,7 +6,7 @@ describe('PreviousDateRange', function() {
   beforeEach(function() {
     var Range = require('../lib/previous-date-range');
     this.format = 'DD-MM-YYYY';
-    this.date = new Date(3000, 1, 12);
+    this.date = new Date(3000, 1, 12, 12, 12);
     this.range = new Range;
   });
 
@@ -55,12 +55,17 @@ describe('PreviousDateRange', function() {
   
     describe('whole', function() {
       it('should return the length in days', function() {
-        var range;
         this.range.previous(2, 'week');
-        range = this.range.getRange({
-          startingFrom: this.date
-        });
+        var range = this.range.getRange({ startingFrom: this.date });
+        
         expect(range.length).to.equal(14);
+      });
+
+      it('should return the dates in whole days', function() {
+        var range = this.range.getRange({ startingFrom: this.date });
+        
+        expect(range.start.format('HH:mm:ss')).to.equal('00:00:00');
+        expect(range.end.format('HH:mm:ss')).to.equal('23:59:59');
       });
 
       it('about the previous 2 months', function() {
@@ -100,12 +105,21 @@ describe('PreviousDateRange', function() {
   
     describe('non whole', function() {
       it('should return the length in days', function() {
-        var range;
         this.range.previous(2, 'week', false);
-        range = this.range.getRange({
+        
+        var range = this.range.getRange({
           startingFrom: this.date
         });
         expect(range.length).to.equal(14);
+      });
+
+      it('should return the dates in whole days', function() {
+        this.range.whole = false;
+
+        var range = this.range.getRange({ startingFrom: this.date });
+        
+        expect(range.start.format('HH:mm:ss')).to.equal('00:00:00');
+        expect(range.end.format('HH:mm:ss')).to.equal('23:59:59');
       });
 
       it('about the previous 2 months', function() {

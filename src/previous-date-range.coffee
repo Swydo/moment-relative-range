@@ -37,6 +37,8 @@ class PreviousDateRange
         .subtract 1, 'day'
         .endOf @cleanMeasure
 
+     end.endOf 'day'
+
   getStart: (compareToDate) ->
     end = moment compareToDate
     
@@ -46,11 +48,14 @@ class PreviousDateRange
       if @toDate
         end.endOf @cleanMeasure
 
-      end.add 1, 'day'
+      end
+        .add 1, 'day'
     else
       end
         .subtract @units-1, @countableMeasure
         .startOf @cleanMeasure
+
+    end.startOf 'day'
 
   toJSON: ->
     json = {}
