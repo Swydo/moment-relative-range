@@ -96,18 +96,15 @@ describe 'PreviousDateRange', ->
         expect(range.end.date(), 'end date').to.equal 11
         
     describe 'non whole', ->
-      beforeEach ->
-        @range.whole = false
-
       it 'should return the length in days', ->
-        @range.previous 2, 'week'
+        @range.previous 2, 'week', false
 
         range = @range.getRange startingFrom: @date
 
         expect(range.length).to.equal 14
 
       it 'about the previous 2 months', ->
-        @range.previous 2, 'month'
+        @range.previous 2, 'month', false
 
         range = @range.getRange startingFrom: @date
 
@@ -115,7 +112,7 @@ describe 'PreviousDateRange', ->
         expect(range.end.format(@format), 'end date').to.equal '11-02-3000'
 
       it 'about the previous ISO week', ->
-        @range.previous 1, 'isoWeek'
+        @range.previous 1, 'isoWeek', false
 
         range = @range.getRange startingFrom: @date
 
@@ -137,3 +134,36 @@ describe 'PreviousDateRange', ->
         # Date of the month
         expect(range.start.date(), 'start date').to.equal 8
         expect(range.end.date(), 'end date').to.equal 11
+
+    describe '<measure>ToDate', ->
+      it 'weekToDate', ->
+        @range.previous 2, 'weekToDate'
+
+        range = @range.getRange startingFrom: @date
+
+        expect(range.start.format(@format), 'start date').to.equal '02-02-3000'
+        expect(range.end.format(@format), 'end date').to.equal '11-02-3000'
+
+      it 'isoWeekToDate', ->
+        @range.previous 1, 'isoWeekToDate'
+
+        range = @range.getRange startingFrom: @date
+
+        expect(range.start.format(@format), 'start date').to.equal '10-02-3000'
+        expect(range.end.format(@format), 'end date').to.equal '11-02-3000'
+
+      it 'monthToDate', ->
+        @range.previous 1, 'monthToDate'
+
+        range = @range.getRange startingFrom: @date
+
+        expect(range.start.format(@format), 'start date').to.equal '01-02-3000'
+        expect(range.end.format(@format), 'end date').to.equal '11-02-3000'
+
+      it 'yearToDate', ->
+        @range.previous 2, 'yearToDate'
+
+        range = @range.getRange startingFrom: @date
+
+        expect(range.start.format(@format), 'start date').to.equal '01-01-2999'
+        expect(range.end.format(@format), 'end date').to.equal '11-02-3000'

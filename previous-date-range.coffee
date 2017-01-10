@@ -16,13 +16,14 @@ class PreviousDateRange
   setDefaults: ->
     @measure ?= 'month'
     @units ?= 1
-    @whole ?= true
+    @toDate = /ToDate$/.test @measure
+    @whole = not @toDate
 
   previous: (@units, @measure, whole) ->
+    @setDefaults()
+
     if whole?
       @whole = whole
-
-    @setDefaults()
 
   getRange: (options = {}) ->
     end = @getEnd options.startingFrom
@@ -41,24 +42,36 @@ class PreviousDateRange
         .subtract 1, 'day'
     else
       end
-        .startOf @measure
+        .startOf @getCleanMeasure()
         .subtract 1, 'day'
-        .endOf @measure
+        .endOf @getCleanMeasure()
 
   getStart: (compareToDate) ->
     end = moment compareToDate
     
     if not @whole
-      end
-        .subtract @units, @getCountableMeasure()
-        .add 1, 'day'
+      end.subtract @units, @getCountableMeasure()
+
+      if @toDate
+        end.endOf @getCleanMeasure()
+
+      end.add 1, 'day'
     else
       end
         .subtract @units-1, @getCountableMeasure()
-        .startOf @measure
+        .startOf @getCleanMeasure()
+
+  getCleanMeasure: ->
+    @measure.replace('ToDate', '')
 
   getCountableMeasure: ->
-    if @measure is 'isoWeek' then 'week' else @measure
+    cleanMeasure = @getCleanMeasure()
+
+    switch cleanMeasure
+      when 'isoWeek'
+        'week'
+      else
+        cleanMeasure
 
   toJSON: ->
     json = {}
