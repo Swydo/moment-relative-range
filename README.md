@@ -7,8 +7,14 @@ Calculate a date range in the past from a certain moment
 
 ## Installation
 
+### npm
 ```bash
-npm install previous-date-range --save
+npm i -S previous-date-range
+```
+
+### yarn
+```bash
+yarn add previous-date-range
 ```
 
 ## Basic usage
