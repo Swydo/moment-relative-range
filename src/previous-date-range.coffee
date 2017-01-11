@@ -2,9 +2,10 @@ moment = @moment or require 'moment'
 
 class PreviousDateRange
 
-  @attributes: ['measure', 'units', 'whole']
+  @attributes: ['date', 'measure', 'units', 'whole']
 
   constructor: (data) ->
+    @clearCache()
     @set data
 
   set: (data = {}) ->
@@ -13,20 +14,71 @@ class PreviousDateRange
     this
 
   previous: (@units, @measure, whole) ->
-    if whole?
-      @whole = whole
+    if whole? then @whole = whole
+    this
+
+  clearCache: ->
+    @_cache = {}
 
   getRange: (options = {}) ->
-    end = @getEnd options.startingFrom
-    start = @getStart end
-    length = 1 + end.diff start, 'days'
+    console.warn('DEPRECATED: call .end, .start and .length directly on the range object')
 
-    start: start
-    end: end
-    length: length
+    if options.startingFrom
+      console.warn('DEPRECATED: set .date directly on the range object')
+      @date = options.startingFrom
 
-  getEnd: (fromDate) ->
-    end = moment fromDate
+    this
+
+  toJSON: ->
+    @constructor.attributes.reduce (json, attr) =>
+      json[attr] = @[attr] if @[attr]?
+      json
+    , {}
+
+Object.defineProperty PreviousDateRange.prototype, 'units',
+  get: -> @_units or 1
+  set: (val) ->
+    @clearCache()
+    @_units = val
+
+Object.defineProperty PreviousDateRange.prototype, 'measure',
+  get: -> @_measure or 'month'
+  set: (val) ->
+    @clearCache()
+    @_measure = val
+
+Object.defineProperty PreviousDateRange.prototype, 'toDate',
+  get: -> /ToDate$/.test @measure
+
+Object.defineProperty PreviousDateRange.prototype, "cleanMeasure",
+  get: -> @measure.replace(/[s]?[ToDate]+$/, '')
+
+Object.defineProperty PreviousDateRange.prototype, "countableMeasure",
+  get: ->
+    switch @cleanMeasure
+      when 'isoWeek'
+        'week'
+      else
+        @cleanMeasure
+
+Object.defineProperty PreviousDateRange.prototype, 'whole',
+  get: -> if @_whole? then @_whole else not @toDate
+  set: (val) ->
+    @clearCache()
+    @_whole = val
+
+Object.defineProperty PreviousDateRange.prototype, 'date',
+  get: -> @_date
+  set: (val) ->
+    @clearCache()
+    @_date = val
+
+Object.defineProperty PreviousDateRange.prototype, 'end',
+  get: ->
+    if @_cache.end
+      return @_cache.end
+
+    end = moment(@date)
 
     if not @whole
       end
@@ -39,53 +91,41 @@ class PreviousDateRange
 
      end.endOf 'day'
 
-  getStart: (compareToDate) ->
-    end = moment compareToDate
+     @_cache.end = end
+
+Object.defineProperty PreviousDateRange.prototype, 'start',
+  get: ->
+    if @_cache.start
+      return @_cache.start
+
+    start = moment @end
     
     if not @whole
-      end.subtract @units, @countableMeasure
+      start.subtract @units, @countableMeasure
 
       if @toDate
-        end.endOf @cleanMeasure
+        start.endOf @cleanMeasure
 
-      end
+      start
         .add 1, 'day'
     else
-      end
+      start
         .subtract @units-1, @countableMeasure
         .startOf @cleanMeasure
 
-    end.startOf 'day'
+    start.startOf 'day'
 
-  toJSON: ->
-    json = {}
-    for attr in @constructor.attributes when @[attr]?
-      json[attr] = @[attr]
-    json
+    @_cache.start = start
 
-# Use getters and setters to add default values and update `toDate` value
+Object.defineProperty PreviousDateRange.prototype, 'length',
+  get: -> 1 + @end.diff @start, 'days'
 
-Object.defineProperty PreviousDateRange.prototype, 'units',
-  get: -> @_units or 1
-  set: (val) -> @_units = val
-
-Object.defineProperty PreviousDateRange.prototype, 'measure',
-  get: -> @_measure or 'month'
-  set: (val) ->
-    @_measure = val
-    @toDate = /ToDate$/.test @measure
-    @whole = not @toDate
-
-Object.defineProperty PreviousDateRange.prototype, "cleanMeasure",
-  get: -> @measure.replace('ToDate', '')
-
-Object.defineProperty PreviousDateRange.prototype, "countableMeasure",
-  get: ->
-    switch @cleanMeasure
-      when 'isoWeek'
-        'week'
-      else
-        @cleanMeasure
+moment.fn.previous ?= (units, measure, whole) ->
+  new PreviousDateRange
+    date: @clone()
+    units: units
+    measure: measure
+    whole: whole
 
 if module?.exports?
   module.exports = PreviousDateRange
