@@ -1,10 +1,9 @@
-/* eslint-env mocha, chai */
-/* eslint-disable no-var, vars-on-top, func-names, prefer-arrow-callback, no-unused-expressions */
-var expect = require('chai').expect;
+/* eslint-env mocha */
+/* eslint-disable func-names, prefer-arrow-callback, no-unused-expressions */
+import { expect } from 'chai';
+import PreviousDateRange from '../src/previous-date-range';
 
-var PreviousDateRange = require('../').default;
-
-var DAY_FORMAT = 'DD-MM-YYYY';
+const DAY_FORMAT = 'DD-MM-YYYY';
 
 describe('PreviousDateRange', function () {
   beforeEach(function () {
@@ -56,19 +55,19 @@ describe('PreviousDateRange', function () {
 
   describe('#clone', function () {
     it('should not be the same reference as the original', function () {
-      var clone = this.range.clone();
+      const clone = this.range.clone();
 
       expect(this.range === clone).to.be.false;
     });
 
     it('should have the same values as the original', function () {
-      var clone = this.range.clone();
+      const clone = this.range.clone();
 
       expect(clone.toJSON()).to.deep.equal(this.range.toJSON());
     });
 
     it('should respect passed data', function () {
-      var clone = this.range.clone({
+      const clone = this.range.clone({
         units: 5,
         measure: 'foo',
       });
@@ -87,7 +86,7 @@ describe('PreviousDateRange', function () {
     });
 
     it('should return a clone with the new values', function () {
-      var clone = this.range.previous(5, 'day');
+      const clone = this.range.previous(5, 'day');
 
       expect(clone.units).to.equal(5);
       expect(clone.measure).to.equal('day');
@@ -97,40 +96,40 @@ describe('PreviousDateRange', function () {
   describe('cache', function () {
     it('should update the range when measure changes', function () {
       this.range.measure = 'day';
-      var start1 = this.range.start.format('LLL');
+      const start1 = this.range.start.format('LLL');
 
       this.range.measure = 'week';
-      var start2 = this.range.start.format('LLL');
+      const start2 = this.range.start.format('LLL');
 
       expect(start1).to.not.equal(start2);
     });
 
     it('should update the range when units changes', function () {
       this.range.units = 1;
-      var start1 = this.range.start.format('LLL');
+      const start1 = this.range.start.format('LLL');
 
       this.range.units = 2;
-      var start2 = this.range.start.format('LLL');
+      const start2 = this.range.start.format('LLL');
 
       expect(start1).to.not.equal(start2);
     });
 
     it('should update the range when whole changes', function () {
       this.range.whole = false;
-      var start1 = this.range.start.format('LLL');
+      const start1 = this.range.start.format('LLL');
 
       this.range.whole = true;
-      var start2 = this.range.start.format('LLL');
+      const start2 = this.range.start.format('LLL');
 
       expect(start1).to.not.equal(start2);
     });
 
     it('should update the range when date changes', function () {
       this.range.date = new Date(3000, 1, 1);
-      var start1 = this.range.start.format('LLL');
+      const start1 = this.range.start.format('LLL');
 
       this.range.date = new Date(3001, 1, 1);
-      var start2 = this.range.start.format('LLL');
+      const start2 = this.range.start.format('LLL');
 
       expect(start1).to.not.equal(start2);
     });
@@ -272,7 +271,7 @@ describe('PreviousDateRange', function () {
 
   describe('#toJSON', function () {
     it('should return the attributes of the range', function () {
-      var json = this.range.toJSON();
+      const json = this.range.toJSON();
 
       expect(json.units).to.be.an('number');
       expect(json.measure).to.be.a('string');
@@ -281,7 +280,7 @@ describe('PreviousDateRange', function () {
     });
 
     it('should not return date range keys', function () {
-      var json = this.range.toJSON();
+      const json = this.range.toJSON();
 
       expect(json.length).to.not.be.ok;
       expect(json.start).to.not.be.ok;

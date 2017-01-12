@@ -4,13 +4,12 @@
   "description": "Calculate a date range in the past from a certain moment",
   "main": "lib/previous-date-range.js",
   "scripts": {
-    "prepublish": "npm run build -s && npm test -s",
+    "prepublish": "npm test -s",
     "build": "babel src -d lib",
     "lint": "eslint ./src ./test",
-    "mocha": "mocha -R spec",
-    "start": "npm run watch",
-    "test": "npm run lint -s && npm run mocha",
-    "watch": "npm run build -s -- --watch"
+    "mocha": "npm run build -s && mocha -R spec --compilers js:babel-core/register",
+    "start": "npm run build -s -- -w",
+    "test": "npm run lint -s && npm run mocha"
   },
   "repository": {
     "type": "git",
