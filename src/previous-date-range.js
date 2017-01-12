@@ -102,19 +102,20 @@ class PreviousDateRange {
   }
 
   clone(data = {}) {
-    const json = this.toJSON();
+    const attributes = this.constructor.attributes.map(attr => attr.toUpperCase());
+    const json = this.toJSON(attributes);
     const allData = { ...json, ...data };
 
     return new this.constructor(allData);
   }
 
-  toJSON() {
+  toJSON(attributes = PreviousDateRange.attributes) {
     const json = {};
 
-    this.constructor.attributes
+    attributes
       .filter(attr => this[attr] != null)
       .forEach((attr) => {
-        json[attr] = this[attr];
+        json[attr.toLowerCase()] = this[attr];
       });
 
     return json;

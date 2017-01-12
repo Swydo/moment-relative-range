@@ -63,7 +63,9 @@ describe('PreviousDateRange', function () {
     it('should have the same values as the original', function () {
       const clone = this.range.clone();
 
-      expect(clone.toJSON()).to.deep.equal(this.range.toJSON());
+      this.range.constructor.attributes
+        .map(attr => attr.toUpperCase())
+        .forEach(attr => expect(clone[attr], attr).to.equal(this.range[attr]));
     });
 
     it('should respect passed data', function () {
@@ -74,6 +76,12 @@ describe('PreviousDateRange', function () {
 
       expect(clone.units).to.equal(5);
       expect(clone.measure).to.equal('foo');
+    });
+
+    it('should not set values as defaults', function () {
+      const clone = this.range.clone();
+
+      expect(clone.WHOLE).to.equal(undefined);
     });
   });
 
