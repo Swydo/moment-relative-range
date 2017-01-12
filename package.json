@@ -7,7 +7,7 @@
     "prepublish": "npm test -s",
     "build": "babel src -d lib",
     "lint": "eslint ./src ./test",
-    "mocha": "npm run build -s && mocha -R spec --compilers js:babel-core/register",
+    "mocha": "npm run build -s && _mocha -R spec --compilers js:babel-core/register './tests/**/*.js'",
     "start": "npm run build -s -- -w",
     "test": "npm run lint -s && npm run mocha"
   },

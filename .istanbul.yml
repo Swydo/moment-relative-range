@@ -1,0 +1,17 @@
+instrumentation:
+    root: .
+    extensions:
+        - .js
+    default-excludes: true
+    excludes:
+        - lib/**
+    variable: __coverage__
+    compact: true
+    preserve-comments: false
+    complete-copy: false
+    save-baseline: false
+    baseline-file: ./coverage/coverage-baseline.raw.json
+    include-all-sources: false
+    include-pid: false
+    es-modules: false
+    auto-wrap: false
