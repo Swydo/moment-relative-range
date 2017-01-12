@@ -28,12 +28,14 @@ class PreviousDateRange {
 
     const end = moment(this.date);
 
-    if (!this.whole) {
-      end.subtract(this.margin, 'day');
-    } else {
-      end.startOf(this.cleanMeasure)
-        .subtract(this.margin, 'day')
+    if (this.whole) {
+      end
+        .subtract(this.margin - 1, 'day')
+        .startOf(this.cleanMeasure)
+        .subtract(1, 'day')
         .endOf(this.cleanMeasure);
+    } else {
+      end.subtract(this.margin, 'day');
     }
 
     end.endOf('day');
@@ -47,7 +49,10 @@ class PreviousDateRange {
 
   get isToDate() { return /ToDate$/.test(this.measure); }
 
-  get whole() { return this.WHOLE != null ? this.WHOLE : !this.isToDate; }
+  // Days are always whole days.
+  // If something is `<measure>ToDate`, then it isn't whole by default.
+  // Can be manually overruled for things that aren't a day.
+  get whole() { return this.cleanMeasure === 'day' || this.WHOLE != null ? this.WHOLE : !this.isToDate; }
 
   get date() { return this.DATE; }
 
@@ -57,7 +62,7 @@ class PreviousDateRange {
 
   get measure() { return this.MEASURE || 'month'; }
 
-  get cleanMeasure() { return this.measure.replace(/[s]?[ToDate]+$/, ''); }
+  get cleanMeasure() { return this.measure.replace(/[ToDate]+$/, '').replace(/s$/, ''); }
 
   get countableMeasure() {
     switch (this.cleanMeasure) {

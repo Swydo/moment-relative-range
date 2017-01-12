@@ -149,6 +149,18 @@ describe('PreviousDateRange', function () {
       expect(this.range.start.format(DAY_FORMAT)).to.equal('09-02-3000');
       expect(this.range.end.format(DAY_FORMAT)).to.equal('10-02-3000');
     });
+
+    it('should handle whole month', function () {
+      this.range.date = new Date(3000, 0, 1);
+
+      expect(this.range.start.format(DAY_FORMAT)).to.equal('01-12-2999');
+      expect(this.range.end.format(DAY_FORMAT)).to.equal('31-12-2999');
+
+      this.range.margin = 2;
+
+      expect(this.range.start.format(DAY_FORMAT)).to.equal('01-11-2999');
+      expect(this.range.end.format(DAY_FORMAT)).to.equal('30-11-2999');
+    });
   });
 
   describe('whole', function () {
