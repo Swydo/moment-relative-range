@@ -143,7 +143,7 @@ describe('PreviousDateRange', function () {
     });
   });
 
-  describe('margin', function () {
+  describe('.margin', function () {
     it('should move the date range', function () {
       this.range.measure = 'day';
       this.range.units = 2;
@@ -171,7 +171,7 @@ describe('PreviousDateRange', function () {
     });
   });
 
-  describe('whole', function () {
+  describe('.whole', function () {
     it('should return the length in days', function () {
       this.range.units = 2;
       this.range.measure = 'weeks';
@@ -297,6 +297,7 @@ describe('PreviousDateRange', function () {
       expect(json.measure).to.be.a('string');
       expect(json.whole).to.be.a('boolean');
       expect(json.margin).to.be.a('number');
+      expect(json.fixedStart).to.not.be.ok;
     });
 
     it('should not return date range keys', function () {
@@ -305,6 +306,14 @@ describe('PreviousDateRange', function () {
       expect(json.length).to.not.be.ok;
       expect(json.start).to.not.be.ok;
       expect(json.end).to.not.be.ok;
+    });
+  });
+
+  describe('.fixedStart', function () {
+    it('should lock the start date', function () {
+      this.range.fixedStart = new Date(4000, 0, 15);
+
+      expect(this.range.start.format(DAY_FORMAT)).to.equal('15-01-4000');
     });
   });
 });

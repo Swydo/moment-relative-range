@@ -2,6 +2,7 @@ import moment from 'moment';
 
 class PreviousDateRange {
   get start() {
+    if (this.fixedStart) { return moment(this.fixedStart); }
     if (this.CACHE.start) { return this.CACHE.start; }
 
     const start = moment(this.end);
@@ -73,6 +74,8 @@ class PreviousDateRange {
     }
   }
 
+  get fixedStart() { return this.FIXEDSTART; }
+
   constructor(data) {
     this.clearCache();
     this.set(data);
@@ -128,6 +131,7 @@ PreviousDateRange.attributes = [
   'units',
   'whole',
   'margin',
+  'fixedStart',
 ];
 
 PreviousDateRange.attributes.forEach((attr) => {
