@@ -29,9 +29,11 @@ class PreviousDateRange {
     const end = moment(this.date);
 
     if (!this.whole) {
-      end.subtract(1, 'day');
+      end.subtract(this.margin, 'day');
     } else {
-      end.startOf(this.cleanMeasure).subtract(1, 'day').endOf(this.cleanMeasure);
+      end.startOf(this.cleanMeasure)
+        .subtract(this.margin, 'day')
+        .endOf(this.cleanMeasure);
     }
 
     end.endOf('day');
@@ -63,8 +65,10 @@ class PreviousDateRange {
     this.UNITS = val;
   }
 
-  get measure() {
-    return this.MEASURE || 'month';
+  get measure() { return this.MEASURE || 'month'; }
+  set measure(val) {
+    this.clearCache();
+    this.MEASURE = val;
   }
 
   get cleanMeasure() {
@@ -80,9 +84,10 @@ class PreviousDateRange {
     }
   }
 
-  set measure(val) {
+  get margin() { return this.MARGIN == null ? 1 : this.MARGIN; }
+  set margin(val) {
     this.clearCache();
-    this.MEASURE = val;
+    this.MARGIN = val;
   }
 
   constructor(data) {

@@ -2,11 +2,12 @@
 /* eslint-disable no-var, vars-on-top, func-names, prefer-arrow-callback, no-unused-expressions */
 var expect = require('chai').expect;
 
-var PreviousDateRange = require('../lib/previous-date-range').default;
+var PreviousDateRange = require('../').default;
+
+var DAY_FORMAT = 'DD-MM-YYYY';
 
 describe('PreviousDateRange', function () {
   beforeEach(function () {
-    this.format = 'DD-MM-YYYY';
     this.range = new PreviousDateRange();
     this.range.date = new Date(3000, 1, 12, 12, 12);
   });
@@ -35,6 +36,10 @@ describe('PreviousDateRange', function () {
 
     it('should have be a whole measure', function () {
       expect(this.range.whole).to.equal(true);
+    });
+
+    it('should have margin 1', function () {
+      expect(this.range.margin).to.equal(1);
     });
   });
 
@@ -131,6 +136,22 @@ describe('PreviousDateRange', function () {
     });
   });
 
+  describe('margin', function () {
+    it('should move the date range', function () {
+      this.range.measure = 'day';
+      this.range.units = 2;
+      this.range.margin = 0;
+
+      expect(this.range.start.format(DAY_FORMAT)).to.equal('11-02-3000');
+      expect(this.range.end.format(DAY_FORMAT)).to.equal('12-02-3000');
+
+      this.range.margin = 2;
+
+      expect(this.range.start.format(DAY_FORMAT)).to.equal('09-02-3000');
+      expect(this.range.end.format(DAY_FORMAT)).to.equal('10-02-3000');
+    });
+  });
+
   describe('whole', function () {
     it('should return the length in days', function () {
       this.range.units = 2;
@@ -148,8 +169,8 @@ describe('PreviousDateRange', function () {
       this.range.units = 2;
       this.range.measure = 'months';
 
-      expect(this.range.start.format(this.format), 'start date').to.equal('01-12-2999');
-      expect(this.range.end.format(this.format), 'end date').to.equal('31-01-3000');
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('01-12-2999');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('31-01-3000');
     });
 
     it('about the previous ISO week', function () {
@@ -193,8 +214,8 @@ describe('PreviousDateRange', function () {
       this.range.units = 2;
       this.range.measure = 'months';
 
-      expect(this.range.start.format(this.format), 'start date').to.equal('12-12-2999');
-      expect(this.range.end.format(this.format), 'end date').to.equal('11-02-3000');
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('12-12-2999');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
     });
 
     it('about the previous ISO week', function () {
@@ -222,30 +243,30 @@ describe('PreviousDateRange', function () {
       this.range.units = 2;
       this.range.measure = 'weekToDate';
 
-      expect(this.range.start.format(this.format), 'start date').to.equal('02-02-3000');
-      expect(this.range.end.format(this.format), 'end date').to.equal('11-02-3000');
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('02-02-3000');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
     });
 
     it('isoWeekToDate', function () {
       this.range.measure = 'isoWeeksToDate';
 
-      expect(this.range.start.format(this.format), 'start date').to.equal('10-02-3000');
-      expect(this.range.end.format(this.format), 'end date').to.equal('11-02-3000');
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('10-02-3000');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
     });
 
     it('monthToDate', function () {
       this.range.measure = 'monthToDate';
 
-      expect(this.range.start.format(this.format), 'start date').to.equal('01-02-3000');
-      expect(this.range.end.format(this.format), 'end date').to.equal('11-02-3000');
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('01-02-3000');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
     });
 
     it('yearToDate', function () {
       this.range.units = 2;
       this.range.measure = 'yearsToDate';
 
-      expect(this.range.start.format(this.format), 'start date').to.equal('01-01-2999');
-      expect(this.range.end.format(this.format), 'end date').to.equal('11-02-3000');
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('01-01-2999');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
     });
   });
 
