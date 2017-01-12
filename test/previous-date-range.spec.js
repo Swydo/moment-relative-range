@@ -277,6 +277,7 @@ describe('PreviousDateRange', function () {
       expect(json.units).to.be.an('number');
       expect(json.measure).to.be.a('string');
       expect(json.whole).to.be.a('boolean');
+      expect(json.margin).to.be.a('number');
     });
 
     it('should not return date range keys', function () {

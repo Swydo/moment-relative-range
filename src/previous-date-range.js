@@ -48,32 +48,16 @@ class PreviousDateRange {
   get isToDate() { return /ToDate$/.test(this.measure); }
 
   get whole() { return this.WHOLE != null ? this.WHOLE : !this.isToDate; }
-  set whole(val) {
-    this.clearCache();
-    this.WHOLE = val;
-  }
 
   get date() { return this.DATE; }
-  set date(val) {
-    this.clearCache();
-    this.DATE = moment(val);
-  }
 
   get units() { return this.UNITS || 1; }
-  set units(val) {
-    this.clearCache();
-    this.UNITS = val;
-  }
+
+  get margin() { return this.MARGIN == null ? 1 : this.MARGIN; }
 
   get measure() { return this.MEASURE || 'month'; }
-  set measure(val) {
-    this.clearCache();
-    this.MEASURE = val;
-  }
 
-  get cleanMeasure() {
-    return this.measure.replace(/[s]?[ToDate]+$/, '');
-  }
+  get cleanMeasure() { return this.measure.replace(/[s]?[ToDate]+$/, ''); }
 
   get countableMeasure() {
     switch (this.cleanMeasure) {
@@ -82,12 +66,6 @@ class PreviousDateRange {
       default:
         return this.cleanMeasure;
     }
-  }
-
-  get margin() { return this.MARGIN == null ? 1 : this.MARGIN; }
-  set margin(val) {
-    this.clearCache();
-    this.MARGIN = val;
   }
 
   constructor(data) {
@@ -138,7 +116,22 @@ class PreviousDateRange {
   }
 }
 
-PreviousDateRange.attributes = ['date', 'measure', 'units', 'whole'];
+PreviousDateRange.attributes = [
+  'date',
+  'measure',
+  'units',
+  'whole',
+  'margin',
+];
+
+PreviousDateRange.attributes.forEach((attr) => {
+  Object.defineProperty(PreviousDateRange.prototype, attr, {
+    set(value) {
+      this.clearCache();
+      this[attr.toUpperCase()] = value;
+    },
+  });
+});
 
 if (moment.fn.previous == null) {
   moment.fn.previous = function previous(units, measure, whole) {
