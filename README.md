@@ -41,7 +41,7 @@ var clone = range.previous(2, 'months');
 It's also possible to construct a range yourself:
 
 ```js
-import { PreviousDateRange as Range } from 'previous-date-range';
+import Range from 'previous-date-range';
 
 var range = new Range({
     date: new Date(),
@@ -51,3 +51,11 @@ var range = new Range({
 
 // The results are the same as above
 ```
+
+## Options
+
+- `date` (Date): The date to calculate the range from. _required_
+- `measure` (String): Things like month, year, day, isoWeek. _required_
+- `units` (Number): The amount of measures. _required_
+- `margin` (Number): A gap between the the date and the end date of the range, in number of days. _optional_
+- `fixedStart` (Date): A fixed start date. _optional_
