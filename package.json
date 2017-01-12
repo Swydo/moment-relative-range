@@ -4,11 +4,13 @@
   "description": "Calculate a date range in the past from a certain moment",
   "main": "lib/previous-date-range.js",
   "scripts": {
-    "prepublish": "npm run build",
-    "build": "node_modules/.bin/coffee -o lib -c src/previous-date-range.coffee",
-    "lint": "node_modules/.bin/eslint ./src",
-    "watch": "node_modules/.bin/coffee -o lib -w -c src/previous-date-range.coffee",
-    "test": "node_modules/.bin/mocha -R spec"
+    "prepublish": "npm run build && npm test",
+    "build": "babel src -d lib",
+    "lint": "eslint ./src",
+    "mocha": "mocha -R spec",
+    "start": "npm run watch",
+    "test": "npm run lint -s && npm run mocha",
+    "watch": "npm run build -s -- --watch"
   },
   "repository": {
     "type": "git",
@@ -29,8 +31,9 @@
     "moment": "^2.6.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-env": "^1.1.8",
     "chai": "^3.5.0",
-    "coffee-script": "^1.12.2",
     "eslint": "^3.13.1",
     "eslint-config-airbnb-base": "^11.0.1",
     "eslint-plugin-import": "^2.2.0",

@@ -1,8 +1,9 @@
+/* eslint-env mocha, chai */
 var chai = require('chai');
 var expect = chai.expect;
 var moment = require('moment');
 
-var PreviousDateRange = require('../lib/previous-date-range');
+var PreviousDateRange = require('../lib/previous-date-range').default;
 
 describe('moment.fn.previous', function() {
   it('should return a range', function() {
@@ -38,8 +39,8 @@ describe('PreviousDateRange', function() {
       expect(this.range.measure).to.equal('month');
     });
 
-    it('should have not be a toDate measure', function() {
-      expect(this.range.toDate).to.equal(false);
+    it('should not be a isToDate measure', function() {
+      expect(this.range.isToDate).to.equal(false);
     });
 
     it('should have be a whole measure', function() {
@@ -111,7 +112,7 @@ describe('PreviousDateRange', function() {
   describe('whole', function() {
     it('should return the length in days', function() {
       this.range.previous(2, 'week');
-      
+
       expect(this.range.length).to.equal(14);
     });
 
@@ -122,14 +123,14 @@ describe('PreviousDateRange', function() {
 
     it('about the previous 2 months', function() {
       this.range.previous(2, 'month');
-      
+
       expect(this.range.start.format(this.format), 'start date').to.equal('01-12-2999');
       expect(this.range.end.format(this.format), 'end date').to.equal('31-01-3000');
     });
 
     it('about the previous ISO week', function() {
       this.range.previous(1, 'isoWeek');
-      
+
       expect(this.range.start.isoWeekday()).to.equal(1);
       expect(this.range.end.isoWeekday()).to.equal(7);
       expect(this.range.start.date(), 'start date').to.equal(3);
@@ -198,7 +199,7 @@ describe('PreviousDateRange', function() {
 
     it('isoWeekToDate', function() {
       this.range.measure = 'isoWeeksToDate';
-      
+
       expect(this.range.start.format(this.format), 'start date').to.equal('10-02-3000');
       expect(this.range.end.format(this.format), 'end date').to.equal('11-02-3000');
     });
