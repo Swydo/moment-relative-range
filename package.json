@@ -6,7 +6,7 @@
   "scripts": {
     "prepublish": "npm run build && npm test",
     "build": "babel src -d lib",
-    "lint": "eslint ./src",
+    "lint": "eslint ./src ./test",
     "mocha": "mocha -R spec",
     "start": "npm run watch",
     "test": "npm run lint -s && npm run mocha",
@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
+    "babel-plugin-transform-object-rest-spread": "^6.20.2",
     "babel-preset-env": "^1.1.8",
     "chai": "^3.5.0",
     "eslint": "^3.13.1",

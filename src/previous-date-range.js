@@ -100,19 +100,24 @@ class PreviousDateRange {
     return this;
   }
 
-  previous(units1, measure1, whole) {
-    this.units = units1;
-    this.measure = measure1;
-
-    if (whole != null) {
-      this.whole = whole;
-    }
-    return this;
+  previous(units, measure, whole) {
+    return this.clone({
+      units,
+      measure,
+      whole,
+    });
   }
 
   clearCache() {
     this.CACHE = {};
     return this;
+  }
+
+  clone(data = {}) {
+    const json = this.toJSON();
+    const allData = { ...json, ...data };
+
+    return new this.constructor(allData);
   }
 
   toJSON() {

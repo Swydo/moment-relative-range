@@ -19,7 +19,7 @@ yarn add previous-date-range
 
 ## Basic usage
 
-You can use `moment().previous(units, measure)`: 
+You can use `moment().previous(units, measure)`:
 
 ```js
 import moment from 'moment';
@@ -31,11 +31,11 @@ var range = moment().previous(5, 'days');
 // range.end = yesterday
 // range.length = 5
 
-range.previous(2, 'months');
+var clone = range.previous(2, 'months');
 
-// range.start = start of 2 months ago
-// range.end = end of last month
-// range.length = the length of the last 2 months
+// clone.start = start of 2 months ago
+// clone.end = end of last month
+// clone.length = the length of the last 2 months
 ```
 
 It's also possible to construct a range yourself:
