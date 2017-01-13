@@ -69,9 +69,8 @@ describe('PreviousDateRange', function () {
     it('should have the same values as the original', function () {
       const clone = this.range.clone();
 
-      this.range.constructor.attributes
-        .map(attr => attr.toUpperCase())
-        .forEach(attr => expect(clone[attr], attr).to.equal(this.range[attr]));
+      expect(clone.toJSON({ skipGetters: true }))
+        .to.deep.equal(this.range.toJSON({ skipGetters: true }));
     });
 
     it('should respect passed data', function () {
@@ -84,7 +83,7 @@ describe('PreviousDateRange', function () {
       expect(clone.measure).to.equal('foo');
     });
 
-    it('should not set values as defaults', function () {
+    it('should not set defaults on clone', function () {
       const clone = this.range.clone();
 
       expect(clone.__whole).to.equal(undefined); // eslint-disable-line no-underscore-dangle
