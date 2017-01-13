@@ -215,6 +215,13 @@ describe('PreviousDateRange', function () {
       expect(this.range.start.date(), 'start date').to.equal(8);
       expect(this.range.end.date(), 'end date').to.equal(11);
     });
+
+    it('quarter', function () {
+      this.range.measure = 'quarter';
+
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('01-10-2999');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('31-12-2999');
+    });
   });
 
   describe('non whole', function () {
@@ -290,6 +297,13 @@ describe('PreviousDateRange', function () {
 
     it('year', function () {
       this.range.measure = 'year';
+
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('01-01-3000');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
+    });
+
+    it('quarter', function () {
+      this.range.measure = 'quarter';
 
       expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('01-01-3000');
       expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
