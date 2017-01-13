@@ -23,6 +23,12 @@ const rangeSchema = {
   units: {
     type: Number,
     default: 1,
+    calculate(value) {
+      return this.type === 'current' ? 1 : value;
+    },
+  },
+  type: {
+    type: String,
   },
   whole: {
     type: Boolean,
@@ -79,7 +85,7 @@ class PreviousDateRange {
 
   get length() { return 1 + this.end.diff(this.start, 'days'); }
 
-  get isToDate() { return /ToDate$/.test(this.measure); }
+  get isToDate() { return this.type === 'current'; }
 
   // Days are always whole days.
   // If something is `<measure>ToDate`, then it isn't whole by default.
@@ -89,7 +95,7 @@ class PreviousDateRange {
     return this.cleanMeasure === 'day' || whole != null ? whole : !this.isToDate;
   }
 
-  get cleanMeasure() { return this.measure.replace(/[ToDate]+$/, '').replace(/s$/, ''); }
+  get cleanMeasure() { return this.measure.replace(/s$/, ''); }
 
   get countableMeasure() {
     switch (this.cleanMeasure) {
@@ -154,7 +160,10 @@ Object.keys(rangeSchema).forEach((attr) => {
   const property = {};
 
   if (!descriptor || !descriptor.get) {
-    property.get = function get() { return this[key] != null ? this[key] : settings.default; };
+    property.get = function get() {
+      const value = this[key] != null ? this[key] : settings.default;
+      return settings.calculate ? settings.calculate.call(this, value) : value;
+    };
   }
 
   property.set = function set(value) {

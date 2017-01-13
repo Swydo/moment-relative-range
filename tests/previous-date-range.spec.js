@@ -262,34 +262,36 @@ describe('PreviousDateRange', function () {
     });
   });
 
-  describe('<measure>ToDate', function () {
-    it('weekToDate', function () {
-      this.range.units = 2;
-      this.range.measure = 'weekToDate';
+  describe('current', function () {
+    beforeEach(function () {
+      this.range.type = 'current';
+    });
 
-      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('02-02-3000');
+    it('week', function () {
+      this.range.measure = 'week';
+
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('09-02-3000');
       expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
     });
 
-    it('isoWeekToDate', function () {
-      this.range.measure = 'isoWeeksToDate';
+    it('isoWeek', function () {
+      this.range.measure = 'isoWeeks';
 
       expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('10-02-3000');
       expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
     });
 
-    it('monthToDate', function () {
-      this.range.measure = 'monthToDate';
+    it('month', function () {
+      this.range.measure = 'month';
 
       expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('01-02-3000');
       expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
     });
 
-    it('yearToDate', function () {
-      this.range.units = 2;
-      this.range.measure = 'yearsToDate';
+    it('year', function () {
+      this.range.measure = 'year';
 
-      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('01-01-2999');
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('01-01-3000');
       expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('11-02-3000');
     });
   });
