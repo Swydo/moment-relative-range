@@ -315,10 +315,23 @@ describe('PreviousDateRange', function () {
   });
 
   describe('.fixedStart', function () {
-    it('should lock the start date', function () {
+    it('should maximize the start date', function () {
+      this.range.fixedStart = new Date(3000, 0, 22);
+
+      expect(this.range.start.format(DAY_FORMAT)).to.equal('22-01-3000');
+    });
+
+    it('should never be larger than the end date', function () {
       this.range.fixedStart = new Date(4000, 0, 15);
 
-      expect(this.range.start.format(DAY_FORMAT)).to.equal('15-01-4000');
+      expect(this.range.start.format(DAY_FORMAT))
+        .to.equal(this.range.end.format(DAY_FORMAT));
+    });
+
+    it('should never be outside the range', function () {
+      this.range.fixedStart = new Date(2000, 0, 15);
+
+      expect(this.range.start.format(DAY_FORMAT)).to.equal('01-01-3000');
     });
 
     it('should be returned in toJSON', function () {

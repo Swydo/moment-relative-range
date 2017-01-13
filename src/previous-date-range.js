@@ -38,9 +38,8 @@ const rangeSchema = {
 
 class PreviousDateRange {
   get start() {
-    if (this.fixedStart) { return moment(this.fixedStart); }
-
-    const start = moment(this.end);
+    const end = this.end;
+    let start = moment(end);
 
     if (!this.whole) {
       start.subtract(this.units, this.countableMeasure);
@@ -52,7 +51,14 @@ class PreviousDateRange {
       start.subtract(this.units - 1, this.countableMeasure).startOf(this.cleanMeasure);
     }
 
-    return start.startOf('day');
+    start.startOf('day');
+
+    if (this.fixedStart) {
+      start = moment.max(start, moment(this.fixedStart));
+      start = moment.min(end, start);
+    }
+
+    return start;
   }
 
   get end() {
