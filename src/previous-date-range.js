@@ -39,7 +39,6 @@ const rangeSchema = {
 class PreviousDateRange {
   get start() {
     if (this.fixedStart) { return moment(this.fixedStart); }
-    if (this.CACHE.start) { return this.CACHE.start; }
 
     const start = moment(this.end);
 
@@ -53,16 +52,10 @@ class PreviousDateRange {
       start.subtract(this.units - 1, this.countableMeasure).startOf(this.cleanMeasure);
     }
 
-    start.startOf('day');
-
-    this.CACHE.start = start;
-
-    return start;
+    return start.startOf('day');
   }
 
   get end() {
-    if (this.CACHE.end) { return this.CACHE.end; }
-
     const end = moment(this.date);
 
     if (this.whole) {
@@ -75,11 +68,7 @@ class PreviousDateRange {
       end.subtract(this.margin, 'day');
     }
 
-    end.endOf('day');
-
-    this.CACHE.end = end;
-
-    return end;
+    return end.endOf('day');
   }
 
   get length() { return 1 + this.end.diff(this.start, 'days'); }
@@ -106,7 +95,6 @@ class PreviousDateRange {
   }
 
   constructor(data) {
-    this.clearCache();
     this.set(data);
   }
 
@@ -126,11 +114,6 @@ class PreviousDateRange {
       measure,
       whole,
     });
-  }
-
-  clearCache() {
-    this.CACHE = {};
-    return this;
   }
 
   clone(data = {}) {

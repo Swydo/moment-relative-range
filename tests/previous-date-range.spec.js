@@ -106,7 +106,7 @@ describe('PreviousDateRange', function () {
     });
   });
 
-  describe('cache', function () {
+  describe('reactivity', function () {
     it('should update the range when measure changes', function () {
       this.range.measure = 'day';
       const start1 = this.range.start.format('LLL');
