@@ -43,13 +43,19 @@ describe('PreviousDateRange', function () {
   });
 
   describe('#set', function () {
-    it('should set units and measure', function () {
+    it('should set attributes', function () {
       this.range.set({
         measure: 'foo',
         units: 2,
       });
       expect(this.range.measure).to.equal('foo');
       expect(this.range.units).to.equal(2);
+    });
+
+    it('should not set disallowed attributes', function () {
+      this.range.set({ foo: 'foo' });
+
+      expect(this.range.foo, 'disallowed attribute').to.equal(undefined);
     });
   });
 
