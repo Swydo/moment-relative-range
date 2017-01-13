@@ -1,5 +1,41 @@
 import moment from 'moment';
 
+function camelize(str) {
+  return str.replace(/(?:^\w|[A-Z])/g, (letter, index) => (index === 0 ? letter.toLowerCase() : letter.toUpperCase()));
+}
+
+function makeKey(value) {
+  return `__${value.replace(/[A-Z]/g, m => `_${m.toLowerCase()}`)}`;
+}
+
+function makeAttribute(value) {
+  return camelize(value).replace(/^__/, '');
+}
+
+const rangeSchema = {
+  date: {
+    type: Date,
+  },
+  measure: {
+    type: String,
+    default: 'month',
+  },
+  units: {
+    type: Number,
+    default: 1,
+  },
+  whole: {
+    type: Boolean,
+  },
+  margin: {
+    type: Number,
+    default: 1,
+  },
+  fixedStart: {
+    type: String,
+  },
+};
+
 class PreviousDateRange {
   get start() {
     if (this.fixedStart) { return moment(this.fixedStart); }
@@ -53,15 +89,10 @@ class PreviousDateRange {
   // Days are always whole days.
   // If something is `<measure>ToDate`, then it isn't whole by default.
   // Can be manually overruled for things that aren't a day.
-  get whole() { return this.cleanMeasure === 'day' || this.WHOLE != null ? this.WHOLE : !this.isToDate; }
-
-  get date() { return this.DATE; }
-
-  get units() { return this.UNITS || 1; }
-
-  get margin() { return this.MARGIN == null ? 1 : this.MARGIN; }
-
-  get measure() { return this.MEASURE || 'month'; }
+  get whole() {
+    const whole = this[makeKey('whole')];
+    return this.cleanMeasure === 'day' || whole != null ? whole : !this.isToDate;
+  }
 
   get cleanMeasure() { return this.measure.replace(/[ToDate]+$/, '').replace(/s$/, ''); }
 
@@ -74,15 +105,13 @@ class PreviousDateRange {
     }
   }
 
-  get fixedStart() { return this.FIXEDSTART; }
-
   constructor(data) {
     this.clearCache();
     this.set(data);
   }
 
   set(data = {}) {
-    this.constructor.attributes
+    Object.keys(rangeSchema)
       .filter(attr => data[attr] != null)
       .forEach((attr) => {
         this[attr] = data[attr];
@@ -105,42 +134,45 @@ class PreviousDateRange {
   }
 
   clone(data = {}) {
-    const attributes = this.constructor.attributes.map(attr => attr.toUpperCase());
-    const json = this.toJSON(attributes);
+    const json = this.toJSON({ skipGetters: true });
     const allData = { ...json, ...data };
 
     return new this.constructor(allData);
   }
 
-  toJSON(attributes = PreviousDateRange.attributes) {
+  toJSON({
+    attributes = Object.keys(rangeSchema),
+    skipGetters = false,
+  } = {}) {
     const json = {};
 
     attributes
+      .map(attr => (skipGetters ? makeKey(attr) : attr))
       .filter(attr => this[attr] != null)
       .forEach((attr) => {
-        json[attr.toLowerCase()] = this[attr];
+        json[makeAttribute(attr)] = this[attr];
       });
 
     return json;
   }
 }
 
-PreviousDateRange.attributes = [
-  'date',
-  'measure',
-  'units',
-  'whole',
-  'margin',
-  'fixedStart',
-];
+Object.keys(rangeSchema).forEach((attr) => {
+  const settings = rangeSchema[attr];
+  const key = makeKey(attr);
+  const descriptor = Object.getOwnPropertyDescriptor(PreviousDateRange.prototype, attr);
 
-PreviousDateRange.attributes.forEach((attr) => {
-  Object.defineProperty(PreviousDateRange.prototype, attr, {
-    set(value) {
-      this.clearCache();
-      this[attr.toUpperCase()] = value;
-    },
-  });
+  const property = {};
+
+  if (!descriptor || !descriptor.get) {
+    property.get = function get() { return this[key] != null ? this[key] : settings.default; };
+  }
+
+  property.set = function set(value) {
+    this[key] = value;
+  };
+
+  Object.defineProperty(PreviousDateRange.prototype, attr, property);
 });
 
 if (moment.fn.previous == null) {

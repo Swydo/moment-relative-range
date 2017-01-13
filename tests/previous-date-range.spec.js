@@ -87,7 +87,7 @@ describe('PreviousDateRange', function () {
     it('should not set values as defaults', function () {
       const clone = this.range.clone();
 
-      expect(clone.WHOLE).to.equal(undefined);
+      expect(clone.__whole).to.equal(undefined); // eslint-disable-line no-underscore-dangle
     });
   });
 
@@ -320,6 +320,12 @@ describe('PreviousDateRange', function () {
       this.range.fixedStart = new Date(4000, 0, 15);
 
       expect(this.range.start.format(DAY_FORMAT)).to.equal('15-01-4000');
+    });
+
+    it('should be returned in toJSON', function () {
+      this.range.fixedStart = new Date(4000, 0, 15);
+
+      expect(this.range.toJSON().fixedStart).to.equal(this.range.fixedStart);
     });
   });
 });
