@@ -4,6 +4,7 @@ previous-date-range
 Calculate a date range in the past from a certain moment
 
 [![Build status](https://api.travis-ci.org/jamiter/previous-date-range.png)](https://travis-ci.org/jamiter/previous-date-range)
+[![Coverage Status](https://coveralls.io/repos/github/jamiter/previous-date-range/badge.svg)](https://coveralls.io/github/jamiter/previous-date-range)
 
 ## Installation
 
