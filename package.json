@@ -1,6 +1,6 @@
 {
   "name": "previous-date-range",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Calculate a date range in the past from a certain moment",
   "main": "lib/previous-date-range.js",
   "scripts": {
