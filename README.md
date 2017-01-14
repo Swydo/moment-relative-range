@@ -31,11 +31,17 @@ var range = moment().previous(5, 'days');
 // range.end = yesterday
 // range.length = 5
 
-var clone = range.previous(2, 'months');
+var clone = range.previous(1, 'months');
 
-// clone.start = start of 2 months ago
+// clone.start = start of 1 months ago
 // clone.end = end of last month
-// clone.length = the length of the last 2 months
+// clone.length = the length of the last month in days
+
+var currentRange = moment().current('month');
+
+// currentRange.start = start of the month
+// currentRange.end = yesterday
+// currentRange.length = the number of days since the start of this month
 ```
 
 It's also possible to construct a range yourself:

@@ -4,11 +4,12 @@ import { expect } from 'chai';
 import moment from 'moment';
 import '../src/previous-date-range';
 
-describe('moment.fn.previous', function () {
+describe('moment.fn.current', function () {
   it('should return a range', function () {
-    const range = moment().previous(2, 'weeks');
+    const range = moment().current('weeks');
 
-    expect(range.type).to.equal('previous');
+    expect(range.type).to.equal('current');
+    expect(range.measure).to.equal('weeks');
     expect(moment.isMoment(range.start)).to.be.ok;
     expect(moment.isMoment(range.end)).to.be.ok;
   });

@@ -29,6 +29,7 @@ const rangeSchema = {
   },
   type: {
     type: String,
+    default: 'previous',
   },
   whole: {
     type: Boolean,
@@ -173,15 +174,23 @@ Object.keys(rangeSchema).forEach((attr) => {
   Object.defineProperty(PreviousDateRange.prototype, attr, property);
 });
 
-if (moment.fn.previous == null) {
-  moment.fn.previous = function previous(units, measure, whole) {
-    return new PreviousDateRange({
-      date: this,
-      units,
-      measure,
-      whole,
-    });
-  };
-}
+moment.fn.previous = function previous(units, measure, whole) {
+  return new PreviousDateRange({
+    date: this,
+    type: 'previous',
+    units,
+    measure,
+    whole,
+  });
+};
+
+moment.fn.current = function current(measure, whole) {
+  return new PreviousDateRange({
+    date: this,
+    type: 'current',
+    measure,
+    whole,
+  });
+};
 
 export default PreviousDateRange;
