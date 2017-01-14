@@ -7,11 +7,11 @@
     "prepublish": "npm test -s",
     "build": "babel src -d lib",
     "cover": "istanbul cover --report lcovonly _mocha -- -R spec --compilers js:babel-core/register './tests/**/*.js'",
-    "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "coverage": "npm run cover && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "lint": "eslint ./src ./test",
     "mocha": "npm run build -s && _mocha -R spec --compilers js:babel-core/register './tests/**/*.js'",
     "start": "npm run build -s -- -w",
-    "test": "npm run lint -s && npm run mocha"
+    "test": "npm run lint -s && npm run coverage"
   },
   "repository": {
     "type": "git",
