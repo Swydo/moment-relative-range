@@ -216,23 +216,27 @@ Object.keys(rangeSchema).forEach((attr) => {
   Object.defineProperty(RelativeRange.prototype, attr, property);
 });
 
-moment.fn.previous = function previous(units, measure, whole) {
-  return new RelativeRange({
-    date: this,
-    type: 'previous',
-    units,
-    measure,
-    whole,
-  });
-};
+export function extendMoment(m) {
+  // eslint-disable-next-line no-param-reassign
+  m.fn.previous = function previous(units, measure, whole) {
+    return new RelativeRange({
+      date: this,
+      type: 'previous',
+      units,
+      measure,
+      whole,
+    });
+  };
 
-moment.fn.current = function current(measure, whole) {
-  return new RelativeRange({
-    date: this,
-    type: 'current',
-    measure,
-    whole,
-  });
-};
+  // eslint-disable-next-line no-param-reassign
+  m.fn.current = function current(measure, whole) {
+    return new RelativeRange({
+      date: this,
+      type: 'current',
+      measure,
+      whole,
+    });
+  };
+}
 
 export default RelativeRange;

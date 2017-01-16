@@ -2,9 +2,13 @@
 /* eslint-disable func-names, prefer-arrow-callback, no-unused-expressions */
 import { expect } from 'chai';
 import moment from 'moment';
-import '../src/relative-range';
+import { extendMoment } from '../src/relative-range';
 
 describe('moment.fn.current', function () {
+  before(function () {
+    extendMoment(moment);
+  });
+
   it('should return a range', function () {
     const range = moment().current('weeks');
 
