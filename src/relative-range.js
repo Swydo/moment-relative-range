@@ -45,6 +45,10 @@ const rangeSchema = {
     type: Date,
     inJSON: false,
   },
+  end: {
+    type: Date,
+    inJSON: false,
+  },
   minimumStart: {
     type: Date,
   },
@@ -90,6 +94,12 @@ class RelativeRange {
 
   get end() {
     const end = moment(this.date);
+
+    const { __end: fixedEnd } = this;
+
+    if (fixedEnd) {
+      return moment.min(fixedEnd, end);
+    }
 
     if (this.whole) {
       end
@@ -147,6 +157,32 @@ class RelativeRange {
       measure,
       whole,
     });
+  }
+
+  lock(part) {
+    if (part) {
+      this[part] = this[part];
+    } else {
+      this.start = this.start;
+      this.end = this.end;
+    }
+    return this;
+  }
+
+  unlock(part) {
+    if (part) {
+      this[part] = null;
+    } else {
+      this.start = null;
+      this.end = null;
+    }
+    return this;
+  }
+
+  isLocked(part) {
+    const parts = part ? [`__${part}`] : ['__start', '__end'];
+
+    return parts.every(key => this[key]);
   }
 
   clone(data = {}) {

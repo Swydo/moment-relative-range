@@ -403,7 +403,7 @@ describe('RelativeRange', function () {
     });
   });
 
-  describe('start', function () {
+  describe('.start', function () {
     describe('#set', function () {
       it('should lock the start date', function () {
         this.range.start = new Date(2000, 0, 1);
@@ -436,6 +436,32 @@ describe('RelativeRange', function () {
     });
   });
 
+  describe('.end', function () {
+    describe('#set', function () {
+      it('should lock the end date', function () {
+        this.range.end = new Date(2000, 0, 1);
+
+        expect(this.range.end.format(DAY_FORMAT)).to.equal('2000-01-01');
+      });
+
+      it('can be unset', function () {
+        this.range.end = new Date(2000, 0, 1);
+        this.range.end = null;
+
+        expect(this.range.end.format(DAY_FORMAT)).to.equal('3000-01-31');
+      });
+
+      it('should be returned in toJSON if set and requested', function () {
+        expect(this.range.toJSON({ attributes: ['end'] }).end).to.equal(undefined);
+
+        this.range.end = new Date(4000, 0, 15);
+
+        expect(this.range.toJSON({ attributes: ['end'] }).end)
+          .to.equal(this.range.end.format(DAY_FORMAT));
+      });
+    });
+  });
+
   describe('.minimumStart', function () {
     it('should maximize the start date', function () {
       this.range.minimumStart = new Date(3000, 0, 22);
@@ -461,6 +487,93 @@ describe('RelativeRange', function () {
 
       expect(this.range.toJSON().minimumStart)
         .to.equal(this.range.minimumStart.format(DAY_FORMAT));
+    });
+  });
+
+  describe('#lock', function () {
+    it('should lock the start and end date', function () {
+      this.range.lock();
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__start).to.be.ok;
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__end).to.be.ok;
+    });
+
+    it('should handle start as parameter', function () {
+      this.range.lock('start');
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__start).to.be.ok;
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__end).to.not.be.ok;
+    });
+
+    it('should handle end as parameter', function () {
+      this.range.lock('end');
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__start).to.not.be.ok;
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__end).to.be.ok;
+    });
+  });
+
+  describe('#unlock', function () {
+    beforeEach(function () {
+      this.range.lock();
+    });
+
+    it('should unlock the start and end date', function () {
+      this.range.unlock();
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__start).to.not.be.ok;
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__end).to.not.be.ok;
+    });
+
+    it('should handle start as parameter', function () {
+      this.range.unlock('start');
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__start).to.not.be.ok;
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__end).to.be.ok;
+    });
+
+    it('should handle end as parameter', function () {
+      this.range.unlock('end');
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__start).to.be.ok;
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(this.range.__end).to.not.be.ok;
+    });
+  });
+
+  describe('#isLocked', function () {
+    it('should be false if not locked', function () {
+      expect(this.range.isLocked()).to.equal(false);
+    });
+
+    it('should be true if locked', function () {
+      this.range.lock();
+
+      expect(this.range.isLocked()).to.equal(true);
+    });
+
+    it('should handle a part', function () {
+      this.range.lock('start');
+
+      expect(this.range.isLocked('start')).to.equal(true);
+      expect(this.range.isLocked('end')).to.equal(false);
     });
   });
 });
