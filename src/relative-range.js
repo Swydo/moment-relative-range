@@ -50,6 +50,10 @@ const rangeSchema = {
   },
 };
 
+function isDateType(Type) {
+  return Object.prototype.toString.call(new Type()) === '[object Date]';
+}
+
 const jsonAttributes = Object.keys(rangeSchema)
   .filter(attr => rangeSchema[attr] && rangeSchema[attr].inJSON !== false);
 
@@ -170,7 +174,7 @@ class RelativeRange {
           return;
         }
 
-        if (schema.type === Date) {
+        if (isDateType(schema.type)) {
           json[attrName] = this[attr] && moment(this[attr]).format(format);
         } else {
           json[attrName] = this[attr];
@@ -206,7 +210,7 @@ Object.keys(rangeSchema).forEach((attr) => {
       throw new Error(`${value} isn't an allowed value for RelativeRange.${attr}`);
     }
 
-    if (schema.type === Date) {
+    if (isDateType(schema.type)) {
       this[key] = value == null ? value : moment(value);
     } else {
       this[key] = value;
