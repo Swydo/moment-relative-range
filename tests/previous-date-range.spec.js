@@ -328,6 +328,29 @@ describe('PreviousDateRange', function () {
     });
   });
 
+  describe('#toArray', function () {
+    it('should have length 2', function () {
+      const array = this.range.toArray();
+
+      expect(array.length).to.equal(2);
+    });
+
+    it('should have YYYY-MM-DD as default format', function () {
+      const array = this.range.toArray();
+
+      expect(array[0]).to.equal(this.range.start.format(DAY_FORMAT));
+      expect(array[0]).to.equal(this.range.start.format(DAY_FORMAT));
+    });
+
+    it('should accept custom format', function () {
+      const customFormat = 'LLL';
+      const array = this.range.toArray(customFormat);
+
+      expect(array[0]).to.equal(this.range.start.format(customFormat));
+      expect(array[0]).to.equal(this.range.start.format(customFormat));
+    });
+  });
+
   describe('.fixedStart', function () {
     it('should maximize the start date', function () {
       this.range.fixedStart = new Date(3000, 0, 22);

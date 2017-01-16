@@ -153,6 +153,10 @@ class PreviousDateRange {
 
     return json;
   }
+
+  toArray(format = DAY_FORMAT) {
+    return [this.start.format(format), this.end.format(format)];
+  }
 }
 
 Object.keys(rangeSchema).forEach((attr) => {
