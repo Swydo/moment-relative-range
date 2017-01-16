@@ -351,6 +351,30 @@ describe('PreviousDateRange', function () {
     });
   });
 
+  describe('start', function () {
+    describe('#set', function () {
+      it('should lock the start date', function () {
+        this.range.start = new Date(2000, 0, 1);
+
+        expect(this.range.start.format(DAY_FORMAT)).to.equal('2000-01-01');
+      });
+
+      it('can be unset', function () {
+        this.range.start = new Date(2000, 0, 1);
+        this.range.start = null;
+
+        expect(this.range.start.format(DAY_FORMAT)).to.equal('3000-01-01');
+      });
+
+      it('should never be larger than the end date', function () {
+        this.range.start = new Date(4000, 0, 15);
+
+        expect(this.range.start.format(DAY_FORMAT))
+          .to.equal(this.range.end.format(DAY_FORMAT));
+      });
+    });
+  });
+
   describe('.fixedStart', function () {
     it('should maximize the start date', function () {
       this.range.fixedStart = new Date(3000, 0, 22);

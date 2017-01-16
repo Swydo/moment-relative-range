@@ -48,6 +48,11 @@ const rangeSchema = {
 class PreviousDateRange {
   get start() {
     const end = this.end;
+
+    if (this.START) {
+      return moment.min(this.START, end);
+    }
+
     let start = moment(end);
 
     if (!this.whole) {
@@ -68,6 +73,10 @@ class PreviousDateRange {
     }
 
     return start;
+  }
+
+  set start(value) {
+    this.START = value == null ? value : moment(value);
   }
 
   get end() {
