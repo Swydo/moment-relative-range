@@ -40,6 +40,18 @@ describe('RelativeRange', function () {
     });
   });
 
+  describe('schema', function () {
+    it('should check enum values', function () {
+      const setBadType = () => { this.range.type = 'foo'; };
+
+      expect(setBadType).to.throw();
+
+      this.range.type = 'current';
+
+      expect(this.range.type).to.equal('current');
+    });
+  });
+
   describe('#set', function () {
     it('should set attributes', function () {
       this.range.set({

@@ -32,6 +32,7 @@ const rangeSchema = {
   type: {
     type: String,
     default: 'previous',
+    enum: ['previous', 'current'],
   },
   whole: {
     type: Boolean,
@@ -190,7 +191,13 @@ Object.keys(rangeSchema).forEach((attr) => {
   }
 
   property.set = function set(value) {
-    if (rangeSchema[attr].type === Date) {
+    const schema = rangeSchema[attr];
+
+    if (schema.enum && value != null && !schema.enum.includes(value)) {
+      throw new Error(`${value} isn't an allowed value for RelativeRange.${attr}`);
+    }
+
+    if (schema.type === Date) {
       this[key] = value == null ? value : moment(value);
     } else {
       this[key] = value;
