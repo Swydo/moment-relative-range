@@ -41,17 +41,25 @@ const rangeSchema = {
     type: Number,
     default: 1,
   },
+  start: {
+    type: Date,
+    inJSON: false,
+  },
   minimumStart: {
     type: Date,
   },
 };
 
+const jsonAttributes = Object.keys(rangeSchema)
+  .filter(attr => rangeSchema[attr] && rangeSchema[attr].inJSON !== false);
+
 class RelativeRange {
   get start() {
     const end = this.end;
+    const { __start: fixedStart } = this;
 
-    if (this.START) {
-      return moment.min(this.START, end);
+    if (fixedStart) {
+      return moment.min(fixedStart, end);
     }
 
     let start = moment(end);
@@ -74,10 +82,6 @@ class RelativeRange {
     }
 
     return start;
-  }
-
-  set start(value) {
-    this.START = value == null ? value : moment(value);
   }
 
   get end() {
@@ -142,26 +146,31 @@ class RelativeRange {
   }
 
   clone(data = {}) {
-    const json = this.toJSON({ skipGetters: true });
+    const json = this.toJSON({ defaults: false });
     const allData = { ...json, ...data };
 
     return new this.constructor(allData);
   }
 
   toJSON({
-    attributes = Object.keys(rangeSchema),
-    skipGetters = false,
+    attributes = jsonAttributes,
+    defaults = true,
     format = DAY_FORMAT,
   } = {}) {
     const json = {};
 
     attributes
-      .map(attr => (skipGetters ? makeKey(attr) : attr))
+      .map(attr => (!defaults ? makeKey(attr) : attr))
       .filter(attr => this[attr] != null)
       .forEach((attr) => {
         const attrName = makeAttribute(attr);
+        const schema = rangeSchema[attrName];
 
-        if (rangeSchema[attrName].type === Date) {
+        if (schema.inJSON === false && !this[makeKey(attr)]) {
+          return;
+        }
+
+        if (schema.type === Date) {
           json[attrName] = this[attr] && moment(this[attr]).format(format);
         } else {
           json[attrName] = this[attr];

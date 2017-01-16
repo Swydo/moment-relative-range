@@ -79,8 +79,8 @@ describe('RelativeRange', function () {
     it('should have the same values as the original', function () {
       const clone = this.range.clone();
 
-      expect(clone.toJSON({ skipGetters: true }))
-        .to.deep.equal(this.range.toJSON({ skipGetters: true }));
+      expect(clone.toJSON({ defaults: false }))
+        .to.deep.equal(this.range.toJSON({ defaults: false }));
     });
 
     it('should respect passed data', function () {
@@ -391,6 +391,15 @@ describe('RelativeRange', function () {
 
         expect(this.range.start.format(DAY_FORMAT))
           .to.equal(this.range.end.format(DAY_FORMAT));
+      });
+
+      it('should be returned in toJSON if set and requested', function () {
+        expect(this.range.toJSON({ attributes: ['start'] }).start).to.equal(undefined);
+
+        this.range.start = new Date(4000, 0, 15);
+
+        expect(this.range.toJSON({ attributes: ['start'] }).start)
+          .to.equal(this.range.start.format(DAY_FORMAT));
       });
     });
   });
