@@ -1,5 +1,7 @@
 import moment from 'moment';
 
+export const DAY_FORMAT = 'YYYY-MM-DD';
+
 function camelize(str) {
   return str.replace(/(?:^\w|[A-Z])/g, (letter, index) => (index === 0 ? letter.toLowerCase() : letter.toUpperCase()));
 }
