@@ -40,8 +40,8 @@ const rangeSchema = {
     type: Number,
     default: 1,
   },
-  fixedStart: {
-    type: String,
+  minimumStart: {
+    type: Date,
   },
 };
 
@@ -67,8 +67,8 @@ class RelativeRange {
 
     start.startOf('day');
 
-    if (this.fixedStart) {
-      start = moment.max(start, moment(this.fixedStart));
+    if (this.minimumStart) {
+      start = moment.max(start, moment(this.minimumStart));
       start = moment.min(end, start);
     }
 
@@ -150,6 +150,7 @@ class RelativeRange {
   toJSON({
     attributes = Object.keys(rangeSchema),
     skipGetters = false,
+    format = DAY_FORMAT,
   } = {}) {
     const json = {};
 
@@ -157,7 +158,13 @@ class RelativeRange {
       .map(attr => (skipGetters ? makeKey(attr) : attr))
       .filter(attr => this[attr] != null)
       .forEach((attr) => {
-        json[makeAttribute(attr)] = this[attr];
+        const attrName = makeAttribute(attr);
+
+        if (rangeSchema[attrName].type === Date) {
+          json[attrName] = this[attr] && moment(this[attr]).format(format);
+        } else {
+          json[attrName] = this[attr];
+        }
       });
 
     return json;
@@ -183,7 +190,11 @@ Object.keys(rangeSchema).forEach((attr) => {
   }
 
   property.set = function set(value) {
-    this[key] = value;
+    if (rangeSchema[attr].type === Date) {
+      this[key] = value == null ? value : moment(value);
+    } else {
+      this[key] = value;
+    }
   };
 
   Object.defineProperty(RelativeRange.prototype, attr, property);

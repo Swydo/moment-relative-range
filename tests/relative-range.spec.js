@@ -174,6 +174,14 @@ describe('RelativeRange', function () {
     });
   });
 
+  describe('.date', function () {
+    it('can be unset', function () {
+      this.range.date = null;
+
+      expect(this.range.date).to.equal(undefined);
+    });
+  });
+
   describe('.whole', function () {
     it('should return the length in days', function () {
       this.range.units = 2;
@@ -316,7 +324,7 @@ describe('RelativeRange', function () {
       expect(json.measure).to.be.a('string');
       expect(json.whole).to.be.a('boolean');
       expect(json.margin).to.be.a('number');
-      expect(json.fixedStart).to.not.be.ok;
+      expect(json.minimumStart).to.not.be.ok;
     });
 
     it('should not return date range keys', function () {
@@ -375,30 +383,31 @@ describe('RelativeRange', function () {
     });
   });
 
-  describe('.fixedStart', function () {
+  describe('.minimumStart', function () {
     it('should maximize the start date', function () {
-      this.range.fixedStart = new Date(3000, 0, 22);
+      this.range.minimumStart = new Date(3000, 0, 22);
 
       expect(this.range.start.format(DAY_FORMAT)).to.equal('3000-01-22');
     });
 
     it('should never be larger than the end date', function () {
-      this.range.fixedStart = new Date(4000, 0, 15);
+      this.range.minimumStart = new Date(4000, 0, 15);
 
       expect(this.range.start.format(DAY_FORMAT))
         .to.equal(this.range.end.format(DAY_FORMAT));
     });
 
     it('should never be outside the range', function () {
-      this.range.fixedStart = new Date(2000, 0, 15);
+      this.range.minimumStart = new Date(2000, 0, 15);
 
       expect(this.range.start.format(DAY_FORMAT)).to.equal('3000-01-01');
     });
 
     it('should be returned in toJSON', function () {
-      this.range.fixedStart = new Date(4000, 0, 15);
+      this.range.minimumStart = new Date(4000, 0, 15);
 
-      expect(this.range.toJSON().fixedStart).to.equal(this.range.fixedStart);
+      expect(this.range.toJSON().minimumStart)
+        .to.equal(this.range.minimumStart.format(DAY_FORMAT));
     });
   });
 });
