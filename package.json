@@ -11,7 +11,7 @@
     "lint": "eslint ./src ./test",
     "mocha": "npm run build -s && _mocha -R spec --compilers js:babel-core/register './tests/**/*.js'",
     "start": "npm run build -s -- -w",
-    "test": "npm run lint -s && npm run coverage"
+    "test": "npm run mocha"
   },
   "repository": {
     "type": "git",
