@@ -56,7 +56,7 @@ var currentRange = moment().current('month');
 // currentRange.length = the number of days since the start of this month
 ```
 
-### Custom
+## Custom
 It's also possible to construct a range yourself:
 
 ```js
@@ -71,10 +71,23 @@ var range = new RelativeRange({
 // The results are the same as above
 ```
 
-## Options
+### Options
 
 - `date` (Date): The date to calculate the range from. _required_
 - `measure` (String): Things like month, year, day, isoWeek. _required_
 - `units` (Number): The amount of measures. _required_
 - `margin` (Number): A gap between the the date and the end date of the range, in number of days. _optional_
 - `fixedStart` (Date): A fixed start date. _optional_
+
+## moment.range
+
+There is a great package called [moment-range](https://www.npmjs.com/package/moment-range), which works great with this package:
+
+```js
+import moment from 'moment';
+import { extendMoment } from 'moment-range';
+
+extendMoment(moment);
+
+const range = moment.range(moment().previous(5, 'days').toArray());
+```
