@@ -6,5 +6,4 @@ node_js:
 before_install: if [[ `npm -v` < 3* ]]; then npm i -g npm@3; fi
 script:
   - npm run lint -s
-  - npm run test -s
   - npm run coverage -s
