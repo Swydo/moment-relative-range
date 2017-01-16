@@ -2,7 +2,7 @@
 /* eslint-disable func-names, prefer-arrow-callback, no-unused-expressions */
 import { expect } from 'chai';
 import moment from 'moment';
-import '../src/previous-date-range';
+import '../src/relative-range';
 
 describe('moment.fn.current', function () {
   it('should return a range', function () {

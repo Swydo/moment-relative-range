@@ -1,11 +1,11 @@
 /* eslint-env mocha */
 /* eslint-disable func-names, prefer-arrow-callback, no-unused-expressions */
 import { expect } from 'chai';
-import PreviousDateRange, { DAY_FORMAT } from '../src/previous-date-range';
+import RelativeRange, { DAY_FORMAT } from '../src/relative-range';
 
-describe('PreviousDateRange', function () {
+describe('RelativeRange', function () {
   beforeEach(function () {
-    this.range = new PreviousDateRange();
+    this.range = new RelativeRange();
     this.range.date = new Date(3000, 1, 12, 12, 12);
   });
 

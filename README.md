@@ -1,7 +1,7 @@
-previous-date-range
-===================
+RelativeRange
+=============
 
-Calculate a date range in the past from a certain moment
+Calculate a date range relative to a certain moment.
 
 [![Build status](https://api.travis-ci.org/jamiter/previous-date-range.png)](https://travis-ci.org/jamiter/previous-date-range)
 [![Coverage Status](https://coveralls.io/repos/github/jamiter/previous-date-range/badge.svg)](https://coveralls.io/github/jamiter/previous-date-range)
@@ -20,6 +20,7 @@ yarn add previous-date-range
 
 ## Basic usage
 
+### Previous
 You can use `moment().previous(units, measure)`:
 
 ```js
@@ -37,7 +38,12 @@ var clone = range.previous(1, 'months');
 // clone.start = start of 1 months ago
 // clone.end = end of last month
 // clone.length = the length of the last month in days
+```
 
+### Current
+You can use `moment().current(measure)`:
+
+```js
 var currentRange = moment().current('month');
 
 // currentRange.start = start of the month
@@ -45,12 +51,13 @@ var currentRange = moment().current('month');
 // currentRange.length = the number of days since the start of this month
 ```
 
+### Custom
 It's also possible to construct a range yourself:
 
 ```js
-import Range from 'previous-date-range';
+import RelativeRange from 'previous-date-range';
 
-var range = new Range({
+var range = new RelativeRange({
     date: new Date(),
     units: 5,
     measure: 'days'

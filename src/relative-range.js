@@ -45,7 +45,7 @@ const rangeSchema = {
   },
 };
 
-class PreviousDateRange {
+class RelativeRange {
   get start() {
     const end = this.end;
 
@@ -171,7 +171,7 @@ class PreviousDateRange {
 Object.keys(rangeSchema).forEach((attr) => {
   const settings = rangeSchema[attr];
   const key = makeKey(attr);
-  const descriptor = Object.getOwnPropertyDescriptor(PreviousDateRange.prototype, attr);
+  const descriptor = Object.getOwnPropertyDescriptor(RelativeRange.prototype, attr);
 
   const property = {};
 
@@ -186,11 +186,11 @@ Object.keys(rangeSchema).forEach((attr) => {
     this[key] = value;
   };
 
-  Object.defineProperty(PreviousDateRange.prototype, attr, property);
+  Object.defineProperty(RelativeRange.prototype, attr, property);
 });
 
 moment.fn.previous = function previous(units, measure, whole) {
-  return new PreviousDateRange({
+  return new RelativeRange({
     date: this,
     type: 'previous',
     units,
@@ -200,7 +200,7 @@ moment.fn.previous = function previous(units, measure, whole) {
 };
 
 moment.fn.current = function current(measure, whole) {
-  return new PreviousDateRange({
+  return new RelativeRange({
     date: this,
     type: 'current',
     measure,
@@ -208,4 +208,4 @@ moment.fn.current = function current(measure, whole) {
   });
 };
 
-export default PreviousDateRange;
+export default RelativeRange;

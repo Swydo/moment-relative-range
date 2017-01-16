@@ -2,7 +2,7 @@
   "name": "previous-date-range",
   "version": "0.7.0",
   "description": "Calculate a date range in the past from a certain moment",
-  "main": "lib/previous-date-range.js",
+  "main": "lib/relative-range.js",
   "scripts": {
     "prepublish": "npm test -s",
     "build": "babel src -d lib",
@@ -19,8 +19,11 @@
   },
   "keywords": [
     "moment",
+    "range",
+    "relative",
     "date",
-    "previous"
+    "previous",
+    "current"
   ],
   "author": "Michiel ter Reehorst",
   "license": "UNLICENSE",
