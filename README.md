@@ -18,15 +18,20 @@ npm i -S previous-date-range
 yarn add previous-date-range
 ```
 
+## Initiation
+```js
+import moment from 'moment';
+import { extendMoment } from 'previous-date-range';
+
+extendMoment(moment);
+```
+
 ## Basic usage
 
 ### Previous
 You can use `moment().previous(units, measure)`:
 
 ```js
-import moment from 'moment';
-import 'previous-date-range';
-
 var range = moment().previous(5, 'days');
 
 // range.start = 6 days ago
