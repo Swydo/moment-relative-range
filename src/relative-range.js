@@ -1,18 +1,30 @@
+// @flow weak
+/* eslint-disable no-underscore-dangle */
 import moment from 'moment';
 
 export const DAY_FORMAT = 'YYYY-MM-DD';
 
-function camelize(str) {
-  return str.replace(/(?:^\w|[A-Z])/g, (letter, index) => (index === 0 ? letter.toLowerCase() : letter.toUpperCase()));
-}
-
-function makeKey(value) {
+function makeKey(value: string): string {
   return `__${value.replace(/[A-Z]/g, m => `_${m.toLowerCase()}`)}`;
 }
 
-function makeAttribute(value) {
-  return camelize(value).replace(/^__/, '');
+function isDateType(Type): boolean {
+  return Object.prototype.toString.call(new Type()) === '[object Date]';
 }
+
+function makeMomentOrNull(value: any): moment.Moment | null {
+  return value ? moment(value) : value;
+}
+
+const rangeTypes = {
+  previous: 'previous',
+  current: 'current',
+};
+
+const rangeParts = {
+  start: '__start',
+  end: '__end',
+};
 
 const rangeSchema = {
   date: {
@@ -25,14 +37,14 @@ const rangeSchema = {
   units: {
     type: Number,
     default: 1,
-    calculate(value) {
-      return this.type === 'current' ? 1 : value;
+    calculate(value?: ?number): number | void | null {
+      return this.type === rangeTypes.current ? 1 : value;
     },
   },
   type: {
     type: String,
-    default: 'previous',
-    enum: ['previous', 'current'],
+    default: rangeTypes.previous,
+    enum: Object.keys(rangeTypes),
   },
   whole: {
     type: Boolean,
@@ -54,15 +66,55 @@ const rangeSchema = {
   },
 };
 
-function isDateType(Type) {
-  return Object.prototype.toString.call(new Type()) === '[object Date]';
+type RangeSchemaType = {
+  type: mixed;
+  default?: number | string;
+  inJSON?: boolean;
+  enum?: string[];
+  calculate?: (value: any) => mixed;
 }
 
-const jsonAttributes = Object.keys(rangeSchema)
-  .filter(attr => rangeSchema[attr] && rangeSchema[attr].inJSON !== false);
+type RangePartEnum = $Keys<typeof rangeParts>;
+type RangePrivatePartEnum = '__start' | '__end';
+type RangeTypeEnum = $Keys<typeof rangeTypes>;
+type RangeAttributeEnum = $Keys<typeof rangeSchema>;
+
+export type RelativeRangeOptionsType = {
+  units?: number;
+  measure?: string;
+  type?: RangeTypeEnum;
+  whole?: boolean;
+  margin?: number;
+  date?: moment.Moment | string | Date;
+  start?: moment.Moment;
+  end?: moment.Moment;
+  minimumStart?: moment.Moment;
+}
+
+export type RelativeRangeJsonOptionsType = {
+  attributes?: RangeAttributeEnum[];
+  defaults?: boolean;
+  format?: string;
+}
 
 class RelativeRange {
-  get start() {
+
+  units: number;
+  measure: string;
+  type: RangeTypeEnum;
+  whole: boolean;
+  margin: number;
+  start: moment.Moment;
+  end: moment.Moment;
+  date: moment.Moment | string;
+  minimumStart: moment.Moment;
+
+  __start: ?moment.Moment;
+  __end: ?moment.Moment;
+  __whole: ?boolean;
+  __date: ?moment.Moment;
+
+  get start(): moment.Moment {
     const end = this.end;
     const { __start: fixedStart } = this;
 
@@ -92,7 +144,7 @@ class RelativeRange {
     return start;
   }
 
-  get end() {
+  get end(): moment.Moment {
     const end = moment(this.date);
 
     const { __end: fixedEnd } = this;
@@ -114,21 +166,27 @@ class RelativeRange {
     return end.endOf('day');
   }
 
-  get length() { return 1 + this.end.diff(this.start, 'days'); }
+  set start(value: string | moment.Moment | Date): void { this.__start = makeMomentOrNull(value); }
+  set end(value: string | moment.Moment | Date): void { this.__end = makeMomentOrNull(value); }
+  // set date(value: string | moment.Moment | Date): void { this.__date = makeMomentOrNull(value); }
 
-  get isToDate() { return this.type === 'current'; }
+  // get date(): moment.Moment { return this.__date; }
+
+  get length(): number { return 1 + this.end.diff(this.start, 'days'); }
+
+  get isToDate(): boolean { return this.type === 'current'; }
 
   // Days are always whole days.
   // If something is `<measure>ToDate`, then it isn't whole by default.
   // Can be manually overruled for things that aren't a day.
-  get whole() {
-    const whole = this[makeKey('whole')];
-    return this.cleanMeasure === 'day' || whole != null ? whole : !this.isToDate;
+  get whole(): boolean {
+    const whole = this.__whole;
+    return this.cleanMeasure === 'day' || (whole != null ? whole : !this.isToDate);
   }
 
-  get cleanMeasure() { return this.measure.replace(/s$/, ''); }
+  get cleanMeasure(): string { return this.measure.replace(/s$/, ''); }
 
-  get countableMeasure() {
+  get countableMeasure(): string {
     switch (this.cleanMeasure) {
       case 'isoWeek':
         return 'week';
@@ -137,31 +195,33 @@ class RelativeRange {
     }
   }
 
-  constructor(data) {
+  constructor(data: RelativeRangeOptionsType = {}) {
     this.set(data);
   }
 
-  set(data = {}) {
+  set(data: RelativeRangeOptionsType = {}): this {
     Object.keys(rangeSchema)
-      .filter(attr => data[attr] != null)
-      .forEach((attr) => {
-        this[attr] = data[attr];
+      .filter((attr: RangeAttributeEnum) => data[attr] != null)
+      .forEach((attr: RangeAttributeEnum) => {
+        (this: Object)[attr] = data[attr];
       });
 
     return this;
   }
 
-  previous(units, measure, whole) {
-    return this.clone({
+  previous(units: number, measure: string, whole?: boolean): RelativeRange {
+    return new this.constructor({
+      date: this.start,
+      type: 'previous',
       units,
       measure,
       whole,
     });
   }
 
-  lock(part) {
+  lock(part?: RangePartEnum): this {
     if (part) {
-      this[part] = this[part];
+      (this: Object)[part] = (this: Object)[part];
     } else {
       this.start = this.start;
       this.end = this.end;
@@ -169,9 +229,9 @@ class RelativeRange {
     return this;
   }
 
-  unlock(part) {
+  unlock(part?: RangePartEnum): this {
     if (part) {
-      this[part] = null;
+      (this: Object)[part] = null;
     } else {
       this.start = null;
       this.end = null;
@@ -179,48 +239,34 @@ class RelativeRange {
     return this;
   }
 
-  isLocked(part) {
-    const parts = part ? [`__${part}`] : ['__start', '__end'];
+  isLocked(part?: RangePartEnum): boolean {
+    const parts: RangePrivatePartEnum[] = part ? [rangeParts[part]] : ['__start', '__end'];
 
-    return parts.every(key => this[key]);
-  }
-
-  clone(data = {}) {
-    const json = this.toJSON({ defaults: false });
-    const allData = { ...json, ...data };
-
-    return new this.constructor(allData);
+    return parts.every((key: RangePrivatePartEnum) => (this: Object)[key]);
   }
 
   toJSON({
-    attributes = jsonAttributes,
-    defaults = true,
+    attributes = Object.keys(rangeSchema),
     format = DAY_FORMAT,
-  } = {}) {
-    const json = {};
+  }: RelativeRangeJsonOptionsType = {}) {
+    const json: Object = {};
 
     attributes
-      .map(attr => (!defaults ? makeKey(attr) : attr))
-      .filter(attr => this[attr] != null)
-      .forEach((attr) => {
-        const attrName = makeAttribute(attr);
-        const schema = rangeSchema[attrName];
-
-        if (schema.inJSON === false && !this[makeKey(attr)]) {
-          return;
-        }
+      .filter((attr: RangeAttributeEnum) => (this: Object)[attr] != null)
+      .forEach((attr: RangeAttributeEnum) => {
+        const schema: RangeSchemaType = rangeSchema[attr];
 
         if (isDateType(schema.type)) {
-          json[attrName] = this[attr] && moment(this[attr]).format(format);
+          json[attr] = (this: Object)[attr] && moment((this: Object)[attr]).format(format);
         } else {
-          json[attrName] = this[attr];
+          json[attr] = (this: Object)[attr];
         }
       });
 
     return json;
   }
 
-  toArray(format = DAY_FORMAT) {
+  toArray(format = DAY_FORMAT): string[] {
     return [this.start.format(format), this.end.format(format)];
   }
 }
@@ -239,29 +285,37 @@ Object.keys(rangeSchema).forEach((attr) => {
     };
   }
 
-  property.set = function set(value) {
-    const schema = rangeSchema[attr];
+  if (!descriptor || !descriptor.set) {
+    property.set = function set(value) {
+      const schema = rangeSchema[attr];
 
-    if (schema.enum && value != null && !schema.enum.includes(value)) {
-      throw new Error(`${value} isn't an allowed value for RelativeRange.${attr}`);
-    }
+      if (schema.enum && value != null && !schema.enum.includes(value)) {
+        throw new Error(`${value} isn't an allowed value for RelativeRange.${attr}`);
+      }
 
-    if (isDateType(schema.type)) {
-      this[key] = value == null ? value : moment(value);
-    } else {
-      this[key] = value;
-    }
-  };
+      if (isDateType(schema.type)) {
+        this[key] = value == null ? value : moment(value);
+      } else {
+        this[key] = value;
+      }
+    };
+  }
 
-  Object.defineProperty(RelativeRange.prototype, attr, property);
+  if (Object.keys(property).length) {
+    Object.defineProperty(RelativeRange.prototype, attr, property);
+  }
 });
 
 export function extendMoment(m) {
   // eslint-disable-next-line no-param-reassign
-  m.fn.previous = function previous(units, measure, whole) {
+  m.fn.previous = function previous(
+    units: number,
+    measure: string,
+    whole?: boolean,
+  ): RelativeRange {
     return new RelativeRange({
       date: this,
-      type: 'previous',
+      type: rangeTypes.previous,
       units,
       measure,
       whole,
@@ -269,10 +323,13 @@ export function extendMoment(m) {
   };
 
   // eslint-disable-next-line no-param-reassign
-  m.fn.current = function current(measure, whole) {
+  m.fn.current = function current(
+    measure: string,
+    whole?: boolean,
+  ): RelativeRange {
     return new RelativeRange({
       date: this,
-      type: 'current',
+      type: rangeTypes.current,
       measure,
       whole,
     });

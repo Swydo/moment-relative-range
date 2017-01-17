@@ -69,48 +69,12 @@ describe('RelativeRange', function () {
     });
   });
 
-  describe('#clone', function () {
-    it('should not be the same reference as the original', function () {
-      const clone = this.range.clone();
-
-      expect(this.range === clone).to.be.false;
-    });
-
-    it('should have the same values as the original', function () {
-      const clone = this.range.clone();
-
-      expect(clone.toJSON({ defaults: false }))
-        .to.deep.equal(this.range.toJSON({ defaults: false }));
-    });
-
-    it('should respect passed data', function () {
-      const clone = this.range.clone({
-        units: 5,
-        measure: 'foo',
-      });
-
-      expect(clone.units).to.equal(5);
-      expect(clone.measure).to.equal('foo');
-    });
-
-    it('should not set defaults on clone', function () {
-      const clone = this.range.clone();
-
-      expect(clone.__whole).to.equal(undefined); // eslint-disable-line no-underscore-dangle
-    });
-  });
-
   describe('#previous', function () {
-    it('should not set units and measure', function () {
-      this.range.previous(5, 'day');
-
-      expect(this.range.units).to.equal(1);
-      expect(this.range.measure).to.equal('month');
-    });
-
-    it('should return a clone with the new values', function () {
+    it('should return a relative range with the new values', function () {
       const clone = this.range.previous(5, 'day');
 
+      expect(clone.date).to.not.equal(this.range.start);
+      expect(clone.date.format()).to.equal(this.range.start.format());
       expect(clone.units).to.equal(5);
       expect(clone.measure).to.equal('day');
     });
@@ -340,12 +304,10 @@ describe('RelativeRange', function () {
       expect(json.minimumStart).to.not.be.ok;
     });
 
-    it('should not return date range keys', function () {
+    it('should only return range attributes', function () {
       const json = this.range.toJSON();
 
       expect(json.length).to.not.be.ok;
-      expect(json.start).to.not.be.ok;
-      expect(json.end).to.not.be.ok;
     });
 
     it('should allow picking attributes', function () {
@@ -355,18 +317,6 @@ describe('RelativeRange', function () {
 
       expect(json.units).to.be.an('number');
       expect(json.measure).to.be.a('string');
-      expect(json.whole).to.not.be.ok;
-      expect(json.margin).to.not.be.ok;
-      expect(json.minimumStart).to.not.be.ok;
-    });
-
-    it('should be able to skip defaults', function () {
-      this.range.units = 10;
-
-      const json = this.range.toJSON({ defaults: false });
-
-      expect(json.units).to.equal(10);
-      expect(json.measure).to.not.be.ok;
       expect(json.whole).to.not.be.ok;
       expect(json.margin).to.not.be.ok;
       expect(json.minimumStart).to.not.be.ok;
@@ -426,8 +376,6 @@ describe('RelativeRange', function () {
       });
 
       it('should be returned in toJSON if set and requested', function () {
-        expect(this.range.toJSON({ attributes: ['start'] }).start).to.equal(undefined);
-
         this.range.start = new Date(4000, 0, 15);
 
         expect(this.range.toJSON({ attributes: ['start'] }).start)
@@ -452,8 +400,6 @@ describe('RelativeRange', function () {
       });
 
       it('should be returned in toJSON if set and requested', function () {
-        expect(this.range.toJSON({ attributes: ['end'] }).end).to.equal(undefined);
-
         this.range.end = new Date(4000, 0, 15);
 
         expect(this.range.toJSON({ attributes: ['end'] }).end)
