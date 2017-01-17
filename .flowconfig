@@ -1,0 +1,6 @@
+[ignore]
+<PROJECT_ROOT>/tests/.*
+<PROJECT_ROOT>/lib/.*
+
+[options]
+unsafe.enable_getters_and_setters=true
