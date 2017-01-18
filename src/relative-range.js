@@ -11,15 +11,30 @@ function makeMomentOrNull(value: any): moment.Moment | null {
   return value ? moment(value) : value;
 }
 
-const rangeTypes = {
+export const RANGE_TYPES = Object.freeze({
   previous: 'previous',
   current: 'current',
-};
+});
 
-const rangeParts = {
+export const RANGE_PARTS = Object.freeze({
   start: 'start',
   end: 'end',
-};
+});
+
+export const RANGE_MEASURES = Object.freeze({
+  day: 'day',
+  days: 'day',
+  week: 'week',
+  weeks: 'week',
+  isoWeek: 'isoWeek',
+  isoWeeks: 'isoWeek',
+  month: 'month',
+  months: 'month',
+  quarter: 'quarter',
+  quarters: 'quarter',
+  year: 'year',
+  years: 'year',
+});
 
 const rangeSchema = {
   date: {
@@ -27,19 +42,20 @@ const rangeSchema = {
   },
   measure: {
     type: String,
-    default: 'month',
+    default: RANGE_MEASURES.month,
+    enum: Object.keys(RANGE_MEASURES),
   },
   units: {
     type: Number,
     default: 1,
     calculate(value?: ?number): number | void | null {
-      return this.type === rangeTypes.current ? 1 : value;
+      return this.type === RANGE_TYPES.current ? 1 : value;
     },
   },
   type: {
     type: String,
-    default: rangeTypes.previous,
-    enum: Object.keys(rangeTypes),
+    default: RANGE_TYPES.previous,
+    enum: Object.keys(RANGE_TYPES),
   },
   whole: {
     type: Boolean,
@@ -66,8 +82,8 @@ type RangeSchemaType = {
   calculate?: (value: any) => mixed;
 }
 
-type RangePartEnum = $Keys<typeof rangeParts>;
-type RangeTypeEnum = $Keys<typeof rangeTypes>;
+type RangePartEnum = $Keys<typeof RANGE_PARTS>;
+type RangeTypeEnum = $Keys<typeof RANGE_TYPES>;
 type RangeAttributeEnum = $Keys<typeof rangeSchema>;
 
 export type RelativeRangeOptionsType = {
@@ -116,12 +132,12 @@ class RelativeRange {
       if (this.isToDate()) {
         start.endOf(this.cleanMeasure);
       }
-      start.add(1, 'day');
+      start.add(1, RANGE_MEASURES.day);
     } else {
       start.subtract(this.units - 1, this.countableMeasure).startOf(this.cleanMeasure);
     }
 
-    start.startOf('day');
+    start.startOf(RANGE_MEASURES.day);
 
     if (this.minimumStart) {
       start = moment.max(start, moment(this.minimumStart));
@@ -140,15 +156,15 @@ class RelativeRange {
 
     if (this.isWhole()) {
       end
-        .subtract(this.margin - 1, 'day')
+        .subtract(this.margin - 1, RANGE_MEASURES.day)
         .startOf(this.cleanMeasure)
-        .subtract(1, 'day')
+        .subtract(1, RANGE_MEASURES.day)
         .endOf(this.cleanMeasure);
     } else {
-      end.subtract(this.margin, 'day');
+      end.subtract(this.margin, RANGE_MEASURES.day);
     }
 
-    return end.endOf('day');
+    return end.endOf(RANGE_MEASURES.day);
   }
 
   set start(value: string | moment.Moment | Date): void {
@@ -162,24 +178,24 @@ class RelativeRange {
 
   // get date(): moment.Moment { return this.__date; }
 
-  get length(): number { return 1 + this.end.diff(this.start, 'days'); }
+  get length(): number { return 1 + this.end.diff(this.start, RANGE_MEASURES.days); }
 
-  isToDate(): boolean { return this.type === 'current'; }
+  isToDate(): boolean { return this.type === RANGE_TYPES.current; }
 
   // Days are always whole days.
   // If something is `current`, then it isn't whole by default.
   // Can be manually overruled for things that aren't a day.
   isWhole(): boolean {
     const whole = this.data.whole;
-    return this.cleanMeasure === 'day' || (whole != null ? whole : !this.isToDate());
+    return this.cleanMeasure === RANGE_MEASURES.day || (whole != null ? whole : !this.isToDate());
   }
 
-  get cleanMeasure(): string { return this.measure.replace(/s$/, ''); }
+  get cleanMeasure(): string { return RANGE_MEASURES[this.measure]; }
 
   get countableMeasure(): string {
     switch (this.cleanMeasure) {
-      case 'isoWeek':
-        return 'week';
+      case RANGE_MEASURES.isoWeek:
+        return RANGE_MEASURES.week;
       default:
         return this.cleanMeasure;
     }
@@ -199,7 +215,7 @@ class RelativeRange {
   previous(units: number, measure: string, whole?: boolean): RelativeRange {
     return new this.constructor({
       date: this.start,
-      type: 'previous',
+      type: RANGE_TYPES.previous,
       units,
       measure,
       whole,
@@ -227,7 +243,7 @@ class RelativeRange {
   }
 
   isLocked(part?: RangePartEnum): boolean {
-    const parts: RangePartEnum[] = part ? [part] : ['start', 'end'];
+    const parts: RangePartEnum[] = part ? [part] : Object.keys(RANGE_PARTS);
 
     return parts.every((key: RangePartEnum) => this.data[key]);
   }
@@ -303,7 +319,7 @@ export function extendMoment(m) {
   ): RelativeRange {
     return new RelativeRange({
       date: this,
-      type: rangeTypes.previous,
+      type: RANGE_TYPES.previous,
       units,
       measure,
       whole,
@@ -317,7 +333,7 @@ export function extendMoment(m) {
   ): RelativeRange {
     return new RelativeRange({
       date: this,
-      type: rangeTypes.current,
+      type: RANGE_TYPES.current,
       measure,
       whole,
     });
