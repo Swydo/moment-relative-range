@@ -298,7 +298,7 @@ Object.keys(rangeSchema).forEach((attr) => {
       }
 
       if (isDateType(schema.type)) {
-        this.data[attr] = value == null ? value : moment(value);
+        this.data[attr] = makeMomentOrNull(value);
       } else {
         this.data[attr] = value;
       }
