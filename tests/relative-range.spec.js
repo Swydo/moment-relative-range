@@ -301,23 +301,23 @@ describe('RelativeRange', function () {
       expect(json.minimumStart).to.not.be.ok;
     });
 
-    it('should allow picking attributes', function () {
-      const json = this.range.toJSON({
-        attributes: ['units', 'measure'],
-      });
-
-      expect(json.units).to.be.an('number');
-      expect(json.measure).to.be.a('string');
-      expect(json.whole).to.not.be.ok;
-      expect(json.margin).to.not.be.ok;
-      expect(json.minimumStart).to.not.be.ok;
-    });
-
     it('can overrule format', function () {
       this.range.date = '2000-01-01';
       const json = this.range.toJSON({ format: 'YMD' });
 
       expect(json.date).to.equal('200011');
+    });
+
+    it('can skip defaults', function () {
+      const json = this.range.toJSON({ defaults: false });
+
+      expect(json.date).to.be.a('string');
+      expect(json.units).to.not.be.ok;
+      expect(json.measure).to.not.be.ok;
+      expect(json.margin).to.not.be.ok;
+      expect(json.length).to.not.be.ok;
+      expect(json.whole).to.not.be.ok;
+      expect(json.minimumStart).to.not.be.ok;
     });
   });
 

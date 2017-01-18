@@ -236,20 +236,22 @@ class RelativeRange {
   }
 
   toJSON({
-    attributes = Object.keys(rangeSchema),
     format = DAY_FORMAT,
-  }: RelativeRangeJsonOptionsType = {}) {
+    defaults = true,
+  }: RelativeRangeJsonOptionsType = {}): RelativeRangeOptionsType {
     const json: Object = {};
 
-    attributes
-      .filter((attr: RangeAttributeEnum) => (this: Object)[attr] != null)
+    const data = defaults ? this : this.data;
+
+    Object.keys(rangeSchema)
+      .filter((attr: RangeAttributeEnum) => (data: Object)[attr] != null)
       .forEach((attr: RangeAttributeEnum) => {
         const schema: RangeSchemaType = rangeSchema[attr];
 
         if (isDateType(schema.type)) {
-          json[attr] = (this: Object)[attr] && moment((this: Object)[attr]).format(format);
+          json[attr] = (data: Object)[attr] && moment((this: Object)[attr]).format(format);
         } else {
-          json[attr] = (this: Object)[attr];
+          json[attr] = (data: Object)[attr];
         }
       });
 
