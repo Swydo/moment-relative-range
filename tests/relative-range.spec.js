@@ -27,12 +27,8 @@ describe('RelativeRange', function () {
       expect(this.range.measure).to.equal('month');
     });
 
-    it('should not be a isToDate measure', function () {
-      expect(this.range.isToDate).to.equal(false);
-    });
-
-    it('should have be a whole measure', function () {
-      expect(this.range.whole).to.equal(true);
+    it('should not be isToDate', function () {
+      expect(this.range.isToDate()).to.equal(false);
     });
 
     it('should have margin 1', function () {
@@ -299,15 +295,10 @@ describe('RelativeRange', function () {
       expect(json.date).to.be.a('string');
       expect(json.units).to.be.an('number');
       expect(json.measure).to.be.a('string');
-      expect(json.whole).to.be.a('boolean');
       expect(json.margin).to.be.a('number');
-      expect(json.minimumStart).to.not.be.ok;
-    });
-
-    it('should only return range attributes', function () {
-      const json = this.range.toJSON();
-
       expect(json.length).to.not.be.ok;
+      expect(json.whole).to.not.be.ok;
+      expect(json.minimumStart).to.not.be.ok;
     });
 
     it('should allow picking attributes', function () {
@@ -440,31 +431,22 @@ describe('RelativeRange', function () {
     it('should lock the start and end date', function () {
       this.range.lock();
 
-      // eslint-disable-next-line no-underscore-dangle
-      expect(this.range.__start).to.be.ok;
-
-      // eslint-disable-next-line no-underscore-dangle
-      expect(this.range.__end).to.be.ok;
+      expect(this.range.data.start).to.be.ok;
+      expect(this.range.data.end).to.be.ok;
     });
 
     it('should handle start as parameter', function () {
       this.range.lock('start');
 
-      // eslint-disable-next-line no-underscore-dangle
-      expect(this.range.__start).to.be.ok;
-
-      // eslint-disable-next-line no-underscore-dangle
-      expect(this.range.__end).to.not.be.ok;
+      expect(this.range.data.start).to.be.ok;
+      expect(this.range.data.end).to.not.be.ok;
     });
 
     it('should handle end as parameter', function () {
       this.range.lock('end');
 
-      // eslint-disable-next-line no-underscore-dangle
-      expect(this.range.__start).to.not.be.ok;
-
-      // eslint-disable-next-line no-underscore-dangle
-      expect(this.range.__end).to.be.ok;
+      expect(this.range.data.start).to.not.be.ok;
+      expect(this.range.data.end).to.be.ok;
     });
   });
 
@@ -486,21 +468,15 @@ describe('RelativeRange', function () {
     it('should handle start as parameter', function () {
       this.range.unlock('start');
 
-      // eslint-disable-next-line no-underscore-dangle
-      expect(this.range.__start).to.not.be.ok;
-
-      // eslint-disable-next-line no-underscore-dangle
-      expect(this.range.__end).to.be.ok;
+      expect(this.range.data.start).to.not.be.ok;
+      expect(this.range.data.end).to.be.ok;
     });
 
     it('should handle end as parameter', function () {
       this.range.unlock('end');
 
-      // eslint-disable-next-line no-underscore-dangle
-      expect(this.range.__start).to.be.ok;
-
-      // eslint-disable-next-line no-underscore-dangle
-      expect(this.range.__end).to.not.be.ok;
+      expect(this.range.data.start).to.be.ok;
+      expect(this.range.data.end).to.not.be.ok;
     });
   });
 
