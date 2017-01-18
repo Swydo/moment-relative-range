@@ -50,11 +50,9 @@ const rangeSchema = {
   },
   start: {
     type: Date,
-    inJSON: false,
   },
   end: {
     type: Date,
-    inJSON: false,
   },
   minimumStart: {
     type: Date,
@@ -64,7 +62,6 @@ const rangeSchema = {
 type RangeSchemaType = {
   type: mixed;
   default?: number | string;
-  inJSON?: boolean;
   enum?: string[];
   calculate?: (value: any) => mixed;
 }
