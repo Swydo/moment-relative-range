@@ -352,6 +352,12 @@ describe('RelativeRange', function () {
         expect(this.range.start.format(DAY_FORMAT)).to.equal('2000-01-01');
       });
 
+      it('should be settable via #set', function () {
+        this.range.set({ start: new Date(2000, 0, 1) });
+
+        expect(this.range.start.format(DAY_FORMAT)).to.equal('2000-01-01');
+      });
+
       it('can be unset', function () {
         this.range.start = new Date(2000, 0, 1);
         this.range.start = null;
@@ -379,6 +385,12 @@ describe('RelativeRange', function () {
     describe('#set', function () {
       it('should lock the end date', function () {
         this.range.end = new Date(2000, 0, 1);
+
+        expect(this.range.end.format(DAY_FORMAT)).to.equal('2000-01-01');
+      });
+
+      it('should be settable via #set', function () {
+        this.range.set({ end: new Date(2000, 0, 1) });
 
         expect(this.range.end.format(DAY_FORMAT)).to.equal('2000-01-01');
       });

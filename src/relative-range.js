@@ -122,7 +122,7 @@ class RelativeRange {
     const end = this.end;
 
     if (this.data.start) {
-      return moment.min(this.data.start, end);
+      return moment.min(moment(this.data.start), end);
     }
 
     let start = moment(end);
@@ -151,7 +151,7 @@ class RelativeRange {
     const end = moment(this.date);
 
     if (this.data.end) {
-      return moment.min(this.data.end, end);
+      return moment.min(moment(this.data.end), end);
     }
 
     if (this.isWhole()) {
