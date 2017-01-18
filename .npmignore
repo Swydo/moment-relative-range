@@ -1,2 +1,11 @@
 src
 tests
+.babelrc
+.coverall.yml
+.eslintrc.json
+.flowconfig
+.instanbul.yml
+.travis.yml
+wallaby.js
+coverage
+npm-debug.log
