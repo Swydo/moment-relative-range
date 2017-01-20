@@ -293,7 +293,7 @@ Object.keys(rangeSchema).forEach((attr) => {
     property.set = function set(value) {
       const schema = rangeSchema[attr];
 
-      if (schema.enum && value != null && !schema.enum.includes(value)) {
+      if (schema.enum && value != null && schema.enum.indexOf(value) === -1) {
         throw new Error(`${value} isn't an allowed value for RelativeRange.${attr}`);
       }
 
