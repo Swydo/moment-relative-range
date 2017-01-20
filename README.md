@@ -6,6 +6,27 @@ Calculate a date range relative to a certain moment.
 [![Build status](https://api.travis-ci.org/jamiter/previous-date-range.png)](https://travis-ci.org/jamiter/previous-date-range)
 [![Coverage Status](https://coveralls.io/repos/github/jamiter/previous-date-range/badge.svg)](https://coveralls.io/github/jamiter/previous-date-range)
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Contents**
+
+- [Installation](#installation)
+  - [npm](#npm)
+  - [yarn](#yarn)
+- [Initiation](#initiation)
+- [Basic usage](#basic-usage)
+  - [Previous](#previous)
+  - [Current](#current)
+  - [Combinations](#combinations)
+- [Custom](#custom)
+  - [Options](#options)
+- [Conversion](#conversion)
+  - [toArray](#toarray)
+- [Integrations](#integrations)
+  - [moment.range](#momentrange)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Installation
 
 ### npm
@@ -94,7 +115,19 @@ var range = new RelativeRange({
 - `margin` (Number): A gap between the the date and the end date of the range, in number of days. _optional_
 - `fixedStart` (Date): A fixed start date. _optional_
 
-## moment.range
+## Conversion
+
+### toArray
+
+```js
+var array = moment().current('month').toArray(); // ['YYYY-MM-DD', 'YYYY-MM-DD']
+```
+
+`toArray` takes an optional `format` parameter. Defaults to `YYYY-MM-DD`;
+
+## Integrations
+
+### moment.range
 
 There is a great package called [moment-range](https://www.npmjs.com/package/moment-range), which works great with this package:
 
@@ -104,5 +137,13 @@ import { extendMoment } from 'moment-range';
 
 extendMoment(moment);
 
-const range = moment.range(moment().previous(5, 'days').toArray());
+const last5DaysRange = moment().previous(5, 'days');
+
+const momentRange = moment.range(last5DaysRange.toArray());
+
+const last5Days = momentRange.by('day'); // [day1, day2, day3, day4, day5]
+
+const relativeRange = new RelativeRange(momentRange);
+
+relativeRange.current('month'); // etc.
 ```
