@@ -38,22 +38,37 @@ var range = moment().previous(5, 'days');
 // range.end = yesterday
 // range.length = 5
 
-var clone = range.previous(1, 'months');
+var previousMonth = range.previous(1, 'months');
 
-// clone.start = start of 1 months ago
-// clone.end = end of last month
-// clone.length = the length of the last month in days
+// The new range will be relative to the old one
+// previousMonth.start = start of 1 months ago
+// previousMonth.end = end of last month
+// previousMonth.length = the length of the last month in days
+
+var previousYear = previousMonth.previous(1, 'year');
+
+// previousYear.start = start of the year before the previous month
+// etc.
 ```
 
 ### Current
 You can use `moment().current(measure)`:
 
 ```js
-var currentRange = moment().current('month');
+var thisMonth = moment().current('month');
 
-// currentRange.start = start of the month
-// currentRange.end = yesterday
-// currentRange.length = the number of days since the start of this month
+// thisMonth.start = start of the month
+// thisMonth.end = yesterday
+// thisMonth.length = the number of days since the start of this month
+```
+
+### Combinations
+
+```js
+moment()
+    .previous(1, 'year') // Last year
+    .current('month') // Last years December
+    .previous(1, 'month'); // Last years November
 ```
 
 ## Custom
