@@ -73,6 +73,20 @@ describe('RelativeRange', function () {
       expect(clone.date.format()).to.equal(this.range.start.format());
       expect(clone.units).to.equal(5);
       expect(clone.measure).to.equal('day');
+      expect(clone.type).to.equal('previous');
+    });
+  });
+
+  describe('#current', function () {
+    it('should return a relative range with the new values', function () {
+      const clone = this.range.current('month');
+
+      expect(clone.date).to.not.equal(this.range.end);
+      expect(clone.date.format()).to.equal(this.range.end.format());
+      expect(clone.start.date()).to.equal(1);
+      expect(clone.units).to.equal(1);
+      expect(clone.measure).to.equal('month');
+      expect(clone.type).to.equal('current');
     });
   });
 

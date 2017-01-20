@@ -222,6 +222,16 @@ class RelativeRange {
     });
   }
 
+  current(measure: string, whole?: boolean): RelativeRange {
+    return new this.constructor({
+      date: this.end,
+      type: RANGE_TYPES.current,
+      units: 1,
+      measure,
+      whole,
+    });
+  }
+
   lock(part?: RangePartEnum): this {
     if (part) {
       (this: Object)[part] = (this: Object)[part];
