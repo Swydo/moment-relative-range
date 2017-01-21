@@ -16,6 +16,7 @@ Calculate a date range relative to a certain moment.
 - [Initiation](#initiation)
 - [Basic usage](#basic-usage)
   - [Previous](#previous)
+  - [Next](#next)
   - [Current](#current)
   - [Combinations](#combinations)
 - [Custom](#custom)
