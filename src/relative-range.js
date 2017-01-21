@@ -1,9 +1,11 @@
-// @flow weak
+// @flow
 import moment from 'moment';
 
 export const DAY_FORMAT = 'YYYY-MM-DD';
 
-function isDateType(Type): boolean {
+type RangeSchemaTypeEnum = typeof Date | typeof String | typeof Number | typeof Boolean;
+
+function isDateType(Type: RangeSchemaTypeEnum): boolean {
   return Object.prototype.toString.call(new Type()) === '[object Date]';
 }
 
@@ -76,7 +78,7 @@ const rangeSchema = {
 };
 
 type RangeSchemaType = {
-  type: mixed;
+  type: RangeSchemaTypeEnum;
   default?: number | string;
   enum?: string[];
   calculate?: (value: any) => mixed;
@@ -281,7 +283,7 @@ class RelativeRange {
     return json;
   }
 
-  toArray(format = DAY_FORMAT): string[] {
+  toArray(format?: string = DAY_FORMAT): string[] {
     return [this.start.format(format), this.end.format(format)];
   }
 }
@@ -320,7 +322,7 @@ Object.keys(rangeSchema).forEach((attr) => {
   }
 });
 
-export function extendMoment(m) {
+export function extendMoment(m: moment) {
   // eslint-disable-next-line no-param-reassign
   m.fn.previous = function previous(
     units: number,
