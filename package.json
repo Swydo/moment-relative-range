@@ -1,5 +1,5 @@
 {
-  "name": "previous-date-range",
+  "name": "moment-relative-range",
   "version": "0.11.0",
   "description": "Calculate a date range in the past from a certain moment",
   "main": "lib/relative-range.js",

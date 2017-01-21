@@ -3,8 +3,8 @@ RelativeRange
 
 Calculate a date range relative to a certain moment.
 
-[![Build status](https://api.travis-ci.org/jamiter/previous-date-range.png)](https://travis-ci.org/jamiter/previous-date-range)
-[![Coverage Status](https://coveralls.io/repos/github/jamiter/previous-date-range/badge.svg)](https://coveralls.io/github/jamiter/previous-date-range)
+[![Build status](https://api.travis-ci.org/jamiter/moment-relative-range.png)](https://travis-ci.org/jamiter/moment-relative-range)
+[![Coverage Status](https://coveralls.io/repos/github/jamiter/moment-relative-range/badge.svg)](https://coveralls.io/github/jamiter/moment-relative-range)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -32,18 +32,18 @@ Calculate a date range relative to a certain moment.
 
 ### npm
 ```bash
-npm i -S previous-date-range
+npm i -S moment-relative-range
 ```
 
 ### yarn
 ```bash
-yarn add previous-date-range
+yarn add moment-relative-range
 ```
 
 ## Initiation
 ```js
 import moment from 'moment';
-import { extendMoment } from 'previous-date-range';
+import { extendMoment } from 'moment-relative-range';
 
 extendMoment(moment);
 ```
@@ -105,7 +105,7 @@ moment()
 It's also possible to construct a range yourself:
 
 ```js
-import RelativeRange from 'previous-date-range';
+import RelativeRange from 'moment-relative-range';
 
 var range = new RelativeRange({
     date: new Date(),
