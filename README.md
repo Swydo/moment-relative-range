@@ -50,8 +50,6 @@ extendMoment(moment);
 ## Basic usage
 
 ### Previous
-You can use `moment().previous(units, measure)`:
-
 ```js
 var range = moment().previous(5, 'days');
 
@@ -72,6 +70,15 @@ var previousYear = previousMonth.previous(1, 'year');
 // etc.
 ```
 
+### Next
+
+```js
+var range = moment().next(2, 'month');
+
+// range.start = 1st day of next month
+// range.end = last day of the month after the next
+```
+
 ### Current
 You can use `moment().current(measure)`:
 
@@ -89,7 +96,8 @@ var thisMonth = moment().current('month');
 moment()
     .previous(1, 'year') // Last year
     .current('month') // Last years December
-    .previous(1, 'month'); // Last years November
+    .previous(1, 'month') // Last years November
+    .next(1, 'week'); // First week of December last year
 ```
 
 ## Custom
@@ -132,10 +140,9 @@ var array = moment().current('month').toArray(); // ['YYYY-MM-DD', 'YYYY-MM-DD']
 There is a great package called [moment-range](https://www.npmjs.com/package/moment-range), which works great with this package:
 
 ```js
-import moment from 'moment';
-import { extendMoment } from 'moment-range';
+import { extendMoment as extendWithRange } from 'moment-range';
 
-extendMoment(moment);
+extendWithRange(moment);
 
 const last5DaysRange = moment().previous(5, 'days');
 
