@@ -90,6 +90,18 @@ describe('RelativeRange', function () {
     });
   });
 
+  describe('#next', function () {
+    it('should return a relative range with the new values', function () {
+      const clone = this.range.next(3, 'month');
+
+      expect(clone.date).to.not.equal(this.range.end);
+      expect(clone.start.date()).to.equal(1);
+      expect(clone.units).to.equal(3);
+      expect(clone.measure).to.equal('month');
+      expect(clone.type).to.equal('next');
+    });
+  });
+
   describe('reactivity', function () {
     it('should update the range when measure changes', function () {
       this.range.measure = 'day';
@@ -299,6 +311,47 @@ describe('RelativeRange', function () {
 
       expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('3000-01-01');
       expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('3000-02-11');
+    });
+  });
+
+  describe('next', function () {
+    beforeEach(function () {
+      this.range.type = 'next';
+    });
+
+    it('week', function () {
+      this.range.measure = 'week';
+
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('3000-02-16');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('3000-02-22');
+    });
+
+    it('isoWeek', function () {
+      this.range.measure = 'isoWeeks';
+
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('3000-02-17');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('3000-02-23');
+    });
+
+    it('month', function () {
+      this.range.measure = 'month';
+
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('3000-03-01');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('3000-03-31');
+    });
+
+    it('year', function () {
+      this.range.measure = 'year';
+
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('3001-01-01');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('3001-12-31');
+    });
+
+    it('quarter', function () {
+      this.range.measure = 'quarter';
+
+      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('3000-04-01');
+      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('3000-06-30');
     });
   });
 

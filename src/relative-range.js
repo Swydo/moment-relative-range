@@ -16,6 +16,7 @@ function makeMomentOrNull(value: any): moment.Moment | null {
 export const RANGE_TYPES = Object.freeze({
   previous: 'previous',
   current: 'current',
+  next: 'next',
 });
 
 export const RANGE_PARTS = Object.freeze({
@@ -156,14 +157,30 @@ class RelativeRange {
       return moment.min(moment(this.data.end), end);
     }
 
+    let change;
+    let move;
+
+    switch (this.type) {
+      case RANGE_TYPES.next:
+        change = 'add';
+        move = 'endOf';
+        break;
+      default:
+        change = 'subtract';
+        move = 'startOf';
+    }
+
     if (this.isWhole()) {
-      end
-        .subtract(this.margin - 1, RANGE_MEASURES.day)
-        .startOf(this.cleanMeasure)
-        .subtract(1, RANGE_MEASURES.day)
-        .endOf(this.cleanMeasure);
+      end[change](
+        this.margin - 1, RANGE_MEASURES.day,
+      )[move](
+        this.cleanMeasure,
+      )[change](
+        1, RANGE_MEASURES.day,
+      )
+      .endOf(this.cleanMeasure);
     } else {
-      end.subtract(this.margin, RANGE_MEASURES.day);
+      end[change](this.margin, RANGE_MEASURES.day);
     }
 
     return end.endOf(RANGE_MEASURES.day);
@@ -229,6 +246,16 @@ class RelativeRange {
       date: this.end,
       type: RANGE_TYPES.current,
       units: 1,
+      measure,
+      whole,
+    });
+  }
+
+  next(units: number, measure: string, whole?: boolean): RelativeRange {
+    return new this.constructor({
+      date: this.end,
+      type: RANGE_TYPES.next,
+      units,
       measure,
       whole,
     });
@@ -332,6 +359,21 @@ export function extendMoment(m: moment) {
     return new RelativeRange({
       date: this,
       type: RANGE_TYPES.previous,
+      units,
+      measure,
+      whole,
+    });
+  };
+
+  // eslint-disable-next-line no-param-reassign
+  m.fn.next = function next(
+    units: number,
+    measure: string,
+    whole?: boolean,
+  ): RelativeRange {
+    return new RelativeRange({
+      date: this,
+      type: RANGE_TYPES.next,
       units,
       measure,
       whole,
