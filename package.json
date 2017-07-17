@@ -3,7 +3,6 @@
   "version": "0.12.0",
   "description": "Calculate a date range in the past from a certain moment",
   "main": "lib/relative-range.js",
-  "module": "src/relative-range.js",
   "scripts": {
     "build": "babel src -d lib && require-self",
     "cover": "istanbul cover --report lcovonly _mocha -- -R spec --compilers js:babel-core/register './tests/**/*.js'",
