@@ -87,7 +87,7 @@ You can use `moment().current(measure)`:
 var thisMonth = moment().current('month');
 
 // thisMonth.start = start of the month
-// thisMonth.end = yesterday
+// thisMonth.end = today
 // thisMonth.length = the number of days since the start of this month
 ```
 
