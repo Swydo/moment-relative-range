@@ -65,7 +65,11 @@ const rangeSchema = {
   },
   margin: {
     type: Number,
-    default: 1,
+    calculate(value?: ?number): number | void | null {
+      const defaultValue = this.type === RANGE_TYPES.current ? 0 : 1;
+
+      return value !== undefined ? value : defaultValue;
+    },
   },
   start: {
     type: Date,
