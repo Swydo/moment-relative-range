@@ -45,6 +45,7 @@ const formatStatic = (range: RelativeRange, format: string = 'll') => {
   const {
       separator = '-',
       otherYear: otherYearConfig = '%s YYYY',
+      // eslint-disable-next-line no-underscore-dangle
     } = moment.localeData()._config.staticRange || DEFAULT_STATIC_RANGE_LOCALE;
 
   const result = [];
@@ -108,6 +109,8 @@ const formatRelative = (range: RelativeRange, format: string = 'RR') => {
       count,
       countableMeasure: measure,
     } = range;
+
+  // eslint-disable-next-line no-underscore-dangle
   let locale = moment.localeData()._config.relativeRange || DEFAULT_RELATIVE_RANGE_LOCALE;
   locale = { ...locale, ...locale[format] };
 
