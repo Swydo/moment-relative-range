@@ -1,5 +1,6 @@
 // @flow
 import moment from 'moment';
+import { formatRelative, formatStatic } from './format';
 
 export const DAY_FORMAT = 'YYYY-MM-DD';
 
@@ -205,6 +206,18 @@ class RelativeRange {
 
   isToDate(): boolean { return this.type === RANGE_TYPES.current; }
 
+  get count(): number {
+    switch (this.type) {
+      case RANGE_TYPES.current:
+        return 0;
+      case RANGE_TYPES.previous:
+        return this.units * -1;
+      case RANGE_TYPES.next:
+      default:
+        return this.units;
+    }
+  }
+
   // Days are always whole days.
   // If something is `current`, then it isn't whole by default.
   // Can be manually overruled for things that aren't a day.
@@ -289,6 +302,16 @@ class RelativeRange {
     const parts: RangePartEnum[] = part ? [part] : Object.keys(RANGE_PARTS);
 
     return parts.every((key: RangePartEnum) => this.data[key]);
+  }
+
+  format(format?: string): string {
+    switch (format) {
+      case 'R':
+      case 'RR':
+        return formatRelative(this, format);
+      default:
+        return formatStatic(this, format);
+    }
   }
 
   toJSON({
