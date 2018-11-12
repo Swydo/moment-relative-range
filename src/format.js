@@ -1,6 +1,7 @@
 // @flow
 import moment from 'moment';
-import RelativeRange, { FormatStaticOptionsType } from './relative-range';
+import RelativeRange from './relative-range';
+import type { FormatStaticOptionsType } from './relative-range';
 
 export const DEFAULT_STATIC_RANGE_LOCALE = {
   separator: '-',
