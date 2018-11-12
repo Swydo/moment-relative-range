@@ -77,6 +77,17 @@ describe('RelativeRange#format', function () {
       es: '1 de ene.',
     },
   }, {
+    range: range.current('day'),
+    format: 'll',
+    locales: {
+      en: 'Jan 1, 3000',
+      nl: '1 jan. 3000',
+      es: '1 de ene. de 3000',
+    },
+    options: {
+      attemptYearHiding: false,
+    },
+  }, {
     range: range.next(1, 'day'),
     format: 'll',
     locales: {
@@ -99,6 +110,17 @@ describe('RelativeRange#format', function () {
       en: 'Feb 1 - 28',
       nl: '1 t/m 28 feb.',
       es: '1 al 28 de feb.',
+    },
+  }, {
+    range: range.next('month'),
+    format: 'll',
+    locales: {
+      en: 'Feb 1 - 28, 3000',
+      nl: '1 t/m 28 feb. 3000',
+      es: '1 al 28 de feb. de 3000',
+    },
+    options: {
+      attemptYearHiding: false,
     },
   }, {
     range: range.previous(1, 'month'),
@@ -320,6 +342,7 @@ describe('RelativeRange#format', function () {
         range: localeRange,
         format,
         locales,
+        options,
       } = translation;
 
     moment.locale('en');
@@ -328,6 +351,7 @@ describe('RelativeRange#format', function () {
     describe(`(${format}) ${englishFormat}`, function () {
       Object.keys(locales).forEach((locale) => {
         const expectation = locales[locale];
+
         before(function () {
           moment.locale(locale);
 
@@ -337,9 +361,13 @@ describe('RelativeRange#format', function () {
           }
         });
 
-        it(`[${locale}]: ${expectation}`, function () {
+        after(function () {
+          moment.locale('en');
+        });
+
+        it(`[${locale}]: ${expectation}${options ? ' (with options)' : ''}`, function () {
           moment.locale(locale);
-          const formatted = localeRange.format(format);
+          const formatted = localeRange.format(format, options);
 
           expect(formatted).to.equal(expectation);
         });

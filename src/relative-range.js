@@ -6,6 +6,10 @@ export const DAY_FORMAT = 'YYYY-MM-DD';
 
 type RangeSchemaTypeEnum = typeof Date | typeof String | typeof Number | typeof Boolean;
 
+export type FormatStaticOptionsType = {
+    attemptYearHiding?: boolean;
+}
+
 function isDateType(Type: RangeSchemaTypeEnum): boolean {
   return Object.prototype.toString.call(new Type()) === '[object Date]';
 }
@@ -304,13 +308,13 @@ class RelativeRange {
     return parts.every((key: RangePartEnum) => this.data[key]);
   }
 
-  format(format?: string): string {
+  format(format?: string, options?: FormatStaticOptionsType): string {
     switch (format) {
       case 'R':
       case 'RR':
         return formatRelative(this, format);
       default:
-        return formatStatic(this, format);
+        return formatStatic(this, format, options);
     }
   }
 
