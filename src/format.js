@@ -1,6 +1,7 @@
 // @flow
 import moment from 'moment';
 import RelativeRange from './relative-range';
+import type { FormatStaticOptionsType } from './relative-range';
 
 export const DEFAULT_STATIC_RANGE_LOCALE = {
   separator: '-',
@@ -36,7 +37,11 @@ moment.updateLocale('en', {
   relativeRange: DEFAULT_RELATIVE_RANGE_LOCALE,
 });
 
-const formatStatic = (range: RelativeRange, format: string = 'll') => {
+const formatStatic = (
+    range: RelativeRange,
+    format: string = 'll',
+    options: FormatStaticOptionsType = {},
+) => {
   const {
       date,
       start,
@@ -47,6 +52,9 @@ const formatStatic = (range: RelativeRange, format: string = 'll') => {
       otherYear: otherYearConfig = '%s YYYY',
       // eslint-disable-next-line no-underscore-dangle
     } = moment.localeData()._config.staticRange || DEFAULT_STATIC_RANGE_LOCALE;
+  const {
+      attemptYearHiding = true,
+  } = options;
 
   const result = [];
 
@@ -78,8 +86,8 @@ const formatStatic = (range: RelativeRange, format: string = 'll') => {
       endFormat = longMonthFormat.replace(/([^D.]*)(M+)([^D.]*)/, '');
     }
   } else {
-    startFormat = startThisYear && sameYear ? longMonthFormat : longDateFormat;
-    endFormat = endThisYear && sameYear ? longMonthFormat : longDateFormat;
+    startFormat = startThisYear && sameYear && attemptYearHiding ? longMonthFormat : longDateFormat;
+    endFormat = endThisYear && sameYear && attemptYearHiding ? longMonthFormat : longDateFormat;
   }
 
   result.push(start.format(startFormat));
@@ -87,7 +95,7 @@ const formatStatic = (range: RelativeRange, format: string = 'll') => {
   if (!sameDay) {
     result.push(separator);
 
-    if (monthsMergable && !endThisYear && endFormat !== longDateFormat) {
+    if (monthsMergable && (!endThisYear || !attemptYearHiding) && endFormat !== longDateFormat) {
       endFormat = otherYearConfig.replace('%s', endFormat);
     }
     result.push(end.format(endFormat));
