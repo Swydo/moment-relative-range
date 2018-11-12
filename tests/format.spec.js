@@ -13,6 +13,14 @@ describe('RelativeRange#format', function () {
   });
 
   const translations = [{
+    range: new RelativeRange({ start: '2000-01-01', end: '2000-01-01' }),
+    format: 'L',
+    locales: {
+      en: '01/01/2000',
+      nl: '01-01-2000',
+      de: '01.01.2000',
+    },
+  }, {
     range: range.current('day'),
     format: 'L',
     locales: {
