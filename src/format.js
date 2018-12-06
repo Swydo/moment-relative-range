@@ -22,7 +22,7 @@ export const DEFAULT_RELATIVE_RANGE_LOCALE = {
   quarter_plural: '%s quarters',
   year: 'year',
   year_plural: '%s years',
-  RR: {
+  r: {
     past: 'last %d',
     future: 'coming %d',
     current: '%d to date',
@@ -53,7 +53,7 @@ const formatStatic = (
       // eslint-disable-next-line no-underscore-dangle
     } = moment.localeData()._config.staticRange || DEFAULT_STATIC_RANGE_LOCALE;
   const {
-      attemptYearHiding = true,
+      attemptYearHiding = false,
   } = options;
 
   const result = [];

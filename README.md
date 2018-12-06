@@ -124,12 +124,23 @@ var range = new RelativeRange({
 - `margin` (Number): A gap between the the date and the end date of the range, in number of days. _optional_
 - `fixedStart` (Date): A fixed start date. _optional_
 
-## Conversion
+## Formatting
 
-### toArray
+### #format
 
 ```js
-var array = moment().current('month').toArray(); // ['YYYY-MM-DD', 'YYYY-MM-DD']
+moment().current('month').format('ll'); // 'Jan 1 - 31, 2000'
+```
+
+Default format is `ll`. There are two custom formats supported: `r` and `R`.
+
+- `r`: today, yesterday, last month, coming week, etc.
+- `R`: this day, previous 1 day, previous month, next week, etc.
+
+### #toArray
+
+```js
+moment().current('month').toArray(); // ['YYYY-MM-DD', 'YYYY-MM-DD']
 ```
 
 `toArray` takes an optional `format` parameter. Defaults to `YYYY-MM-DD`;

@@ -310,8 +310,8 @@ class RelativeRange {
 
   format(format?: string, options?: FormatStaticOptionsType): string {
     switch (format) {
+      case 'r':
       case 'R':
-      case 'RR':
         return formatRelative(this, format);
       default:
         return formatStatic(this, format, options);

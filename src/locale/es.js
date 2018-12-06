@@ -25,7 +25,7 @@ moment.updateLocale('es', {
     year_plural: '%s años',
     year_1: 'el próximo año',
     'year_-1': 'año anterior',
-    RR: {
+    r: {
       day_0: 'hoy',
       day_1: 'mañana',
       'day_-1': 'ayer',

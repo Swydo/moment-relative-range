@@ -21,7 +21,7 @@ moment.updateLocale('de', {
     R: {
       day_0: 'dieser Tag',
     },
-    RR: {
+    r: {
       past: 'letztes %d',
       past_plural: 'letzte %d',
       future: 'kommendes %d',

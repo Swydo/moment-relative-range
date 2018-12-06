@@ -25,7 +25,7 @@ moment.updateLocale('nl', {
       year_1: 'volgend jaar',
       'year_-1': 'vorig jaar',
     },
-    RR: {
+    r: {
       past: 'afgelopen %d',
       future: 'komende %d',
       current: '%d tot nu',

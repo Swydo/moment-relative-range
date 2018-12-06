@@ -156,7 +156,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.current('day'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'today',
       nl: 'vandaag',
@@ -165,7 +165,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.next(1, 'day'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'tomorrow',
       nl: 'morgen',
@@ -174,7 +174,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.previous(1, 'day'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'yesterday',
       nl: 'gisteren',
@@ -183,7 +183,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.previous(2, 'day'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'last 2 days',
       nl: 'afgelopen 2 dagen',
@@ -192,7 +192,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.next(5, 'isoWeek'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'coming 5 weeks',
       nl: 'komende 5 weken',
@@ -201,7 +201,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.previous(3, 'week'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'last 3 weeks',
       nl: 'afgelopen 3 weken',
@@ -210,7 +210,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.current('month'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'month to date',
       nl: 'maand tot nu',
@@ -219,7 +219,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.next(3, 'month'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'coming 3 months',
       nl: 'komende 3 maanden',
@@ -228,7 +228,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.next(1, 'quarter'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'coming quarter',
       nl: 'komend kwartaal',
@@ -237,7 +237,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.previous(1, 'quarter'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'last quarter',
       nl: 'afgelopen kwartaal',
@@ -246,7 +246,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.previous(1, 'year'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'last year',
       nl: 'afgelopen jaar',
@@ -255,7 +255,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.next(1, 'year'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'coming year',
       nl: 'komend jaar',
@@ -264,7 +264,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     range: range.next(3, 'year'),
-    format: 'RR',
+    format: 'r',
     locales: {
       en: 'coming 3 years',
       nl: 'komende 3 jaar',
@@ -375,7 +375,10 @@ describe('RelativeRange#format', function () {
 
         it(`[${locale}]: ${expectation}${options ? ' (with options)' : ''}`, function () {
           moment.locale(locale);
-          const formatted = localeRange.format(format, options);
+          const formatted = localeRange.format(format, {
+            attemptYearHiding: true,
+            ...options,
+          });
 
           expect(formatted).to.equal(expectation);
         });
