@@ -50,7 +50,7 @@
     "eslint-config-airbnb-base": "^11.0.1",
     "eslint-plugin-flowtype": "^2.30.0",
     "eslint-plugin-import": "^2.2.0",
-    "flow-bin": "^0.37.4",
+    "flow-bin": "^0.87.0",
     "istanbul": "^1.0.0-alpha.2",
     "mocha": "^3.2.0",
     "moment": "^2.6.0",

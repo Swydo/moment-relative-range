@@ -2,6 +2,3 @@
 <PROJECT_ROOT>/tests/.*
 <PROJECT_ROOT>/lib/.*
 <PROJECT_ROOT>/node_modules/moment-range/lib/moment-range_test.js
-
-[options]
-unsafe.enable_getters_and_setters=true
