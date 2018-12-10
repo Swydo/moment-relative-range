@@ -21,8 +21,10 @@ Calculate a date range relative to a certain moment.
   - [Combinations](#combinations)
 - [Custom](#custom)
   - [Options](#options)
-- [Conversion](#conversion)
-  - [toArray](#toarray)
+- [Formatting](#formatting)
+  - [#format](#format)
+  - [#locale](#locale)
+  - [#toArray](#toarray)
 - [Integrations](#integrations)
   - [moment.range](#momentrange)
 
@@ -136,6 +138,14 @@ Default format is `ll`. There are two custom formats supported: `r` and `R`.
 
 - `r`: today, yesterday, last month, coming week, etc.
 - `R`: this day, previous 1 day, previous month, next week, etc.
+
+### #locale
+You can set the locale of a range by using the `#locale` function. This works the same as for a normal moment.
+
+```js
+moment().current('month').locale('en').format(); // 'Jan 1 - 31, 2000'
+moment().current('month').locale('nl').format(); // '1 - 31 jan., 2000'
+```
 
 ### #toArray
 

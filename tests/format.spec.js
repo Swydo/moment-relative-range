@@ -131,6 +131,30 @@ describe('RelativeRange#format', function () {
       attemptYearHiding: false,
     },
   }, {
+    // This is local
+    range: range.next('month').locale('nl'),
+    format: 'll',
+    locales: {
+      en: '1 t/m 28 feb.',
+      nl: '1 t/m 28 feb.',
+    },
+  }, {
+    // This is a locale being changed
+    range: range.next('month').locale('nl').locale('en'),
+    format: 'll',
+    locales: {
+      en: 'Feb 1 - 28',
+      nl: 'Feb 1 - 28',
+    },
+  }, {
+    // This is a locale being unset
+    range: range.next('month').locale('es').locale(false),
+    format: 'll',
+    locales: {
+      en: 'Feb 1 - 28',
+      nl: '1 t/m 28 feb.',
+    },
+  }, {
     range: range.previous(1, 'month'),
     format: 'll',
     locales: {

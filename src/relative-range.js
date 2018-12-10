@@ -7,7 +7,7 @@ export const DAY_FORMAT = 'YYYY-MM-DD';
 type RangeSchemaTypeEnum = typeof Date | typeof String | typeof Number | typeof Boolean;
 
 export type FormatStaticOptionsType = {
-    attemptYearHiding?: boolean;
+  attemptYearHiding?: boolean;
 }
 
 function isDateType(Type: RangeSchemaTypeEnum): boolean {
@@ -108,6 +108,7 @@ export type RelativeRangeOptionsType = {
   start?: moment.Moment;
   end?: moment.Moment;
   minimumStart?: moment.Moment;
+  locale?: string;
 }
 
 export type RelativeRangeJsonOptionsType = {
@@ -308,13 +309,45 @@ class RelativeRange {
     return parts.every((key: RangePartEnum) => this.data[key]);
   }
 
+  locale(locale?: string | boolean): string | RelativeRange {
+    if (typeof locale === 'undefined') {
+      const localeLocale: string = this.data.locale || moment.locale();
+      return localeLocale;
+    }
+    if (typeof locale === 'boolean') {
+      if (locale === false) {
+        delete this.data.locale;
+      }
+      return this;
+    }
+    this.data.locale = locale;
+
+    return this;
+  }
+
   format(format?: string, options?: FormatStaticOptionsType): string {
+    const localLocale = this.locale();
+    let locale;
+
+    if (typeof localLocale === 'string') {
+      locale = localLocale;
+    }
+
     switch (format) {
       case 'r':
       case 'R':
-        return formatRelative(this, format);
+        return formatRelative({
+          count: this.count,
+          measure: this.countableMeasure,
+          locale,
+        }, format);
       default:
-        return formatStatic(this, format, options);
+        return formatStatic({
+          date: this.date,
+          start: this.start,
+          end: this.end,
+          locale,
+        }, format, options);
     }
   }
 
@@ -364,7 +397,8 @@ Object.keys(rangeSchema).forEach((attr) => {
       const schema = rangeSchema[attr];
 
       if (schema.enum && value != null && schema.enum.indexOf(value) === -1) {
-        throw new Error(`${value} isn't an allowed value for RelativeRange.${attr}`);
+        const valueString = String(value);
+        throw new Error(`${valueString} isn't an allowed value for RelativeRange.${attr}`);
       }
 
       if (isDateType(schema.type)) {
