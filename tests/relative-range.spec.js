@@ -580,4 +580,27 @@ describe('RelativeRange', function () {
       expect(this.range.isLocked('end')).to.equal(false);
     });
   });
+
+  describe('#locale', function () {
+    it('returns a locale', function () {
+      expect(this.range.locale()).to.equal('en');
+    });
+
+    it('sets a locale', function () {
+      const newLocale = 'fr';
+      expect(this.range.locale(newLocale).locale()).to.equal(newLocale);
+    });
+
+    it('can be unset', function () {
+      expect(this.range.locale('fr').locale(false).locale()).to.equal('en');
+    });
+
+    it('affects static format', function () {
+      expect(this.range.locale('fr').format()).to.equal('1 - 31 janv., 3000');
+    });
+
+    it('affects relative format', function () {
+      expect(this.range.locale('nl').format('R')).to.equal('vorige maand');
+    });
+  });
 });
