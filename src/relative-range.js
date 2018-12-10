@@ -7,7 +7,7 @@ export const DAY_FORMAT = 'YYYY-MM-DD';
 type RangeSchemaTypeEnum = typeof Date | typeof String | typeof Number | typeof Boolean;
 
 export type FormatStaticOptionsType = {
-    attemptYearHiding?: boolean;
+  attemptYearHiding?: boolean;
 }
 
 function isDateType(Type: RangeSchemaTypeEnum): boolean {
@@ -397,7 +397,8 @@ Object.keys(rangeSchema).forEach((attr) => {
       const schema = rangeSchema[attr];
 
       if (schema.enum && value != null && schema.enum.indexOf(value) === -1) {
-        throw new Error(`${value} isn't an allowed value for RelativeRange.${attr}`);
+        const valueString = String(value);
+        throw new Error(`${valueString} isn't an allowed value for RelativeRange.${attr}`);
       }
 
       if (isDateType(schema.type)) {
