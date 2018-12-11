@@ -78,7 +78,7 @@ const formatStatic = (
   const sameDay = sameMonth && start.date() === end.date();
   const isReadable = format.toLowerCase() === 'll';
   const monthsMergable = sameMonth && !sameDay && isReadable;
-  const longDateFormat = localMoment.localeData().longDateFormat(format);
+  const longDateFormat = isReadable ? localMoment.localeData().longDateFormat(format) : format;
   const longMonthFormat = isReadable ? longDateFormat.replace(/([^MD.]*)YYYY([^MD.]*)/, '') : longDateFormat;
   const year = date ? moment(date).year() : moment().year();
   const startThisYear = start.year() === year;

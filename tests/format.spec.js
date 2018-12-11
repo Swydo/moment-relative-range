@@ -14,6 +14,20 @@ describe('RelativeRange#format', function () {
 
   const translations = [{
     range: new RelativeRange({ start: '2000-01-01', end: '2000-01-01' }),
+    format: 'YYYY/MM/DD',
+    locales: {
+      en: '2000/01/01',
+      nl: '2000/01/01',
+    },
+  }, {
+    range: new RelativeRange({ start: '2000-01-01', end: '2001-02-03' }),
+    format: 'YYYY/MM/DD',
+    locales: {
+      en: '2000/01/01 - 2001/02/03',
+      nl: '2000/01/01 t/m 2001/02/03',
+    },
+  }, {
+    range: new RelativeRange({ start: '2000-01-01', end: '2000-01-01' }),
     format: 'L',
     locales: {
       en: '01/01/2000',
