@@ -596,7 +596,7 @@ describe('RelativeRange', function () {
     });
 
     it('affects static format', function () {
-      expect(this.range.locale('fr').format()).to.equal('1 - 31 janv., 3000');
+      expect(this.range.locale('fr').format()).to.equal('1 - 31 janv. 3000');
     });
 
     it('affects relative format', function () {

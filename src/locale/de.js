@@ -1,7 +1,6 @@
 import moment from 'moment';
 
 moment.updateLocale('de', {
-  staticRange: {},
   relativeRange: {
     past: 'vorheriges %d',
     past_plural: 'vorherige %d',

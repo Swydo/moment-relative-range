@@ -17,7 +17,7 @@ export type StaticRangeInput = {
 
 export const DEFAULT_STATIC_RANGE_LOCALE = {
   separator: '-',
-  otherYear: '%s, YYYY',
+  otherYear: '%s YYYY',
 };
 
 export const DEFAULT_RELATIVE_RANGE_LOCALE = {
@@ -45,7 +45,10 @@ export const DEFAULT_RELATIVE_RANGE_LOCALE = {
 };
 
 moment.updateLocale('en', {
-  staticRange: DEFAULT_STATIC_RANGE_LOCALE,
+  staticRange: {
+    ...DEFAULT_STATIC_RANGE_LOCALE,
+    otherYear: '%s, YYYY',
+  },
   relativeRange: DEFAULT_RELATIVE_RANGE_LOCALE,
 });
 
