@@ -169,15 +169,21 @@ class RelativeRange {
 
     let change;
     let move;
+    let units;
+    let measure;
 
     switch (this.type) {
       case RANGE_TYPES.next:
         change = 'add';
         move = 'endOf';
+        units = this.units;
+        measure = this.countableMeasure;
         break;
       default:
         change = 'subtract';
         move = 'startOf';
+        units = 1;
+        measure = RANGE_MEASURES.day;
     }
 
     if (this.isWhole()) {
@@ -186,7 +192,7 @@ class RelativeRange {
       )[move](
         this.cleanMeasure,
       )[change](
-        1, RANGE_MEASURES.day,
+        units, measure,
       )
       .endOf(this.cleanMeasure);
     } else {

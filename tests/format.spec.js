@@ -50,10 +50,10 @@ describe('RelativeRange#format', function () {
       nl: '01-01-2998 t/m 31-12-2999',
     },
   }, {
-    range: range.next('month'),
+    range: range.next(2, 'month'),
     format: 'L',
     locales: {
-      nl: '01-02-3000 t/m 28-02-3000',
+      nl: '01-02-3000 t/m 31-03-3000',
     },
   }, {
     range: range.previous(1, 'month'),
@@ -77,7 +77,7 @@ describe('RelativeRange#format', function () {
       en: 'January 1, 2998 - December 31, 2999',
     },
   }, {
-    range: range.next('month'),
+    range: range.next(1, 'month'),
     format: 'LL',
     locales: {
       nl: '1 t/m 28 februari',
@@ -126,7 +126,7 @@ describe('RelativeRange#format', function () {
       es: '31 de dic. de 2999',
     },
   }, {
-    range: range.next('month'),
+    range: range.next(1, 'month'),
     format: 'll',
     locales: {
       en: 'Feb 1 - 28',
@@ -134,7 +134,7 @@ describe('RelativeRange#format', function () {
       es: '1 al 28 de feb.',
     },
   }, {
-    range: range.next('month'),
+    range: range.next(1, 'month'),
     format: 'll',
     locales: {
       en: 'Feb 1 - 28, 3000',
@@ -146,7 +146,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     // This is local
-    range: range.next('month').locale('nl'),
+    range: range.next(1, 'month').locale('nl'),
     format: 'll',
     locales: {
       en: '1 t/m 28 feb.',
@@ -154,7 +154,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     // This is a locale being changed
-    range: range.next('month').locale('nl').locale('en'),
+    range: range.next(1, 'month').locale('nl').locale('en'),
     format: 'll',
     locales: {
       en: 'Feb 1 - 28',
@@ -162,7 +162,7 @@ describe('RelativeRange#format', function () {
     },
   }, {
     // This is a locale being unset
-    range: range.next('month').locale('es').locale(false),
+    range: range.next(1, 'month').locale('es').locale(false),
     format: 'll',
     locales: {
       en: 'Feb 1 - 28',
