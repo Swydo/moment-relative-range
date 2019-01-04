@@ -2,6 +2,10 @@
 import moment from 'moment';
 import type { FormatStaticOptionsType } from './relative-range';
 
+const REMOVE_DAY_REGEX = /([^MY]*)D([^MY,]*)/;
+const REMOVE_MONTH_REGEX = /([^D.]*)(M+)([^D.]*)/;
+const REMOVE_YEAR_REGEX = /([^MD.]*)YYYY([^MD.]*)/;
+
 export type RelativeRangeInput = {
   count: number;
   measure: string;
@@ -52,6 +56,8 @@ moment.updateLocale('en', {
   relativeRange: DEFAULT_RELATIVE_RANGE_LOCALE,
 });
 
+const cleanFormat = (format, regex, bool = true) => (bool ? format.replace(regex, '') : format);
+
 const formatStatic = (
     range: StaticRangeInput,
     format: string = 'll',
@@ -72,6 +78,7 @@ const formatStatic = (
   } = localMoment.localeData()._config.staticRange || DEFAULT_STATIC_RANGE_LOCALE;
   const {
       attemptYearHiding = false,
+      attemptDayHiding = false,
   } = options;
 
   const result = [];
@@ -81,11 +88,16 @@ const formatStatic = (
   const sameDay = sameMonth && start.date() === end.date();
   const isReadable = format.toLowerCase() === 'll';
   const monthsMergable = sameMonth && !sameDay && isReadable;
-  const longDateFormat = isReadable ? localMoment.localeData().longDateFormat(format) : format;
-  const longMonthFormat = isReadable ? longDateFormat.replace(/([^MD.]*)YYYY([^MD.]*)/, '') : longDateFormat;
   const year = date ? moment(date).year() : moment().year();
   const startThisYear = start.year() === year;
   const endThisYear = end.year() === year;
+  const hideDay = attemptDayHiding && isReadable &&
+    start.date() === 1 && end.date() === end.daysInMonth();
+
+  const longDateFormat = isReadable
+    ? cleanFormat(localMoment.localeData().longDateFormat(format), REMOVE_DAY_REGEX, hideDay)
+    : format;
+  const longMonthFormat = cleanFormat(longDateFormat, REMOVE_YEAR_REGEX, isReadable);
 
   start.locale(locale);
   end.locale(locale);
@@ -97,21 +109,25 @@ const formatStatic = (
     const dayFirst = longDateFormat.indexOf('D') < longDateFormat.indexOf('M');
 
     if (dayFirst) {
-      startFormat = longMonthFormat.replace(/([^D.]*)(M+)([^D.]*)/, '');
+      startFormat = cleanFormat(longMonthFormat, REMOVE_MONTH_REGEX);
       endFormat = longMonthFormat;
     } else {
       startFormat = longMonthFormat;
-      endFormat = longMonthFormat.replace(/([^D.]*)(M+)([^D.]*)/, '');
+      endFormat = cleanFormat(longMonthFormat, REMOVE_MONTH_REGEX);
     }
   } else {
     startFormat = startThisYear && sameYear && attemptYearHiding ? longMonthFormat : longDateFormat;
     endFormat = endThisYear && sameYear && attemptYearHiding ? longMonthFormat : longDateFormat;
   }
 
-  result.push(start.format(startFormat));
+  if (startFormat.length) {
+    result.push(start.format(startFormat));
+  }
 
   if (!sameDay) {
-    result.push(separator);
+    if (result.length) {
+      result.push(separator);
+    }
 
     if (monthsMergable && (!endThisYear || !attemptYearHiding) && endFormat !== longDateFormat) {
       endFormat = otherYearConfig.replace('%s', endFormat);

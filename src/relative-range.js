@@ -8,6 +8,7 @@ type RangeSchemaTypeEnum = typeof Date | typeof String | typeof Number | typeof 
 
 export type FormatStaticOptionsType = {
   attemptYearHiding?: boolean;
+  attemptDayHiding?: boolean;
 }
 
 function isDateType(Type: RangeSchemaTypeEnum): boolean {

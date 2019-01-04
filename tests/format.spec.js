@@ -71,6 +71,70 @@ describe('RelativeRange#format', function () {
       de: '1. Januar',
     },
   }, {
+    range: range.previous(1, 'month'),
+    format: 'LL',
+    locales: {
+      en: 'December, 2999',
+      nl: 'december 2999',
+      de: 'Dezember 2999',
+      es: 'diciembre de 2999',
+    },
+    options: {
+      attemptDayHiding: true,
+      attemptYearHiding: false,
+    },
+  }, {
+    range: range.next(1, 'month'),
+    format: 'LL',
+    locales: {
+      en: 'February',
+      nl: 'februari',
+      de: 'Februar',
+    },
+    options: {
+      attemptDayHiding: true,
+      attemptYearHiding: true,
+    },
+  }, {
+    range: range.next(2, 'month'),
+    format: 'LL',
+    locales: {
+      en: 'February - March',
+      nl: 'februari t/m maart',
+      de: 'Februar - März',
+      es: 'febrero al marzo',
+    },
+    options: {
+      attemptDayHiding: true,
+      attemptYearHiding: true,
+    },
+  }, {
+    range: range.next(2, 'month'),
+    format: 'll',
+    locales: {
+      en: 'Feb - Mar',
+      nl: 'feb. t/m mrt.',
+      de: 'Feb. - März',
+      es: 'feb. al mar.',
+    },
+    options: {
+      attemptDayHiding: true,
+      attemptYearHiding: true,
+    },
+  }, {
+    range: range.next(3, 'month'),
+    format: 'LL',
+    locales: {
+      en: 'February, 3000 - April, 3000',
+      nl: 'februari 3000 t/m april 3000',
+      de: 'Februar 3000 - April 3000',
+      es: 'febrero de 3000 al abril de 3000',
+    },
+    options: {
+      attemptDayHiding: true,
+      attemptYearHiding: false,
+    },
+  }, {
     range: range.previous(24, 'month'),
     format: 'LL',
     locales: {
