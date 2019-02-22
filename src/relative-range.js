@@ -51,7 +51,7 @@ const rangeSchema = {
   },
   measure: {
     type: String,
-    default: RANGE_MEASURES.month,
+    default: RANGE_MEASURES.day,
     enum: Object.keys(RANGE_MEASURES),
   },
   units: {
@@ -63,7 +63,7 @@ const rangeSchema = {
   },
   type: {
     type: String,
-    default: RANGE_TYPES.previous,
+    default: RANGE_TYPES.current,
     enum: Object.keys(RANGE_TYPES),
   },
   whole: {

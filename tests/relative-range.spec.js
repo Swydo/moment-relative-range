@@ -23,16 +23,16 @@ describe('RelativeRange', function () {
       expect(this.range.units).to.equal(1);
     });
 
-    it('should have measure "month"', function () {
-      expect(this.range.measure).to.equal('month');
+    it('has a default measure', function () {
+      expect(this.range.measure).to.equal('day');
     });
 
-    it('should not be isToDate', function () {
-      expect(this.range.isToDate()).to.equal(false);
+    it('should be isToDate', function () {
+      expect(this.range.isToDate()).to.equal(true);
     });
 
-    it('should have margin 1', function () {
-      expect(this.range.margin).to.equal(1);
+    it('has no margin', function () {
+      expect(this.range.margin).to.equal(0);
     });
   });
 
@@ -50,12 +50,12 @@ describe('RelativeRange', function () {
 
   describe('#set', function () {
     it('should set attributes', function () {
-      this.range.set({
+      const range = this.range.previous(1, 'month').set({
         measure: 'foo',
         units: 2,
       });
-      expect(this.range.measure).to.equal('foo');
-      expect(this.range.units).to.equal(2);
+      expect(range.measure).to.equal('foo');
+      expect(range.units).to.equal(2);
     });
 
     it('should not set disallowed attributes', function () {
@@ -117,31 +117,34 @@ describe('RelativeRange', function () {
     });
 
     it('should update the range when units changes', function () {
-      this.range.units = 1;
-      const start1 = this.range.start.format('LLL');
+      const range = new RelativeRange().previous(1, 'month');
+      range.units = 1;
+      const start1 = range.start.format('LLL');
 
-      this.range.units = 2;
-      const start2 = this.range.start.format('LLL');
+      range.units = 2;
+      const start2 = range.start.format('LLL');
 
       expect(start1).to.not.equal(start2);
     });
 
     it('should update the range when whole changes', function () {
-      this.range.whole = false;
-      const start1 = this.range.start.format('LLL');
+      const range = new RelativeRange().previous(1, 'month');
+      range.whole = false;
+      const start1 = range.start.format('LLL');
 
-      this.range.whole = true;
-      const start2 = this.range.start.format('LLL');
+      range.whole = true;
+      const start2 = range.start.format('LLL');
 
       expect(start1).to.not.equal(start2);
     });
 
     it('should update the range when date changes', function () {
-      this.range.date = new Date(3000, 1, 1);
-      const start1 = this.range.start.format('LLL');
+      const range = new RelativeRange().previous(1, 'month');
+      range.date = new Date(3000, 1, 1);
+      const start1 = range.start.format('LLL');
 
-      this.range.date = new Date(3001, 1, 1);
-      const start2 = this.range.start.format('LLL');
+      range.date = new Date(3001, 1, 1);
+      const start2 = range.start.format('LLL');
 
       expect(start1).to.not.equal(start2);
     });
@@ -149,6 +152,7 @@ describe('RelativeRange', function () {
 
   describe('.margin', function () {
     it('should move the date range', function () {
+      this.range = this.range.previous(1, 'month');
       this.range.measure = 'day';
       this.range.units = 2;
       this.range.margin = 0;
@@ -163,6 +167,7 @@ describe('RelativeRange', function () {
     });
 
     it('should handle whole month', function () {
+      this.range = this.range.previous(1, 'month');
       this.range.date = new Date(3000, 0, 1);
 
       expect(this.range.start.format(DAY_FORMAT)).to.equal('2999-12-01');
@@ -185,10 +190,9 @@ describe('RelativeRange', function () {
 
   describe('.whole', function () {
     it('should return the length in days', function () {
-      this.range.units = 2;
-      this.range.measure = 'weeks';
+      const range = this.range.previous(2, 'week');
 
-      expect(this.range.length).to.equal(14);
+      expect(range.length).to.equal(14);
     });
 
     it('should return the dates in whole days', function () {
@@ -197,37 +201,35 @@ describe('RelativeRange', function () {
     });
 
     it('about the previous 2 months', function () {
-      this.range.units = 2;
-      this.range.measure = 'months';
+      const range = this.range.previous(2, 'month');
 
-      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('2999-12-01');
-      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('3000-01-31');
+      expect(range.start.format(DAY_FORMAT), 'start date').to.equal('2999-12-01');
+      expect(range.end.format(DAY_FORMAT), 'end date').to.equal('3000-01-31');
     });
 
     it('about the previous ISO week', function () {
-      this.range.measure = 'isoWeek';
+      const range = this.range.previous(1, 'isoWeek');
 
-      expect(this.range.start.isoWeekday()).to.equal(1);
-      expect(this.range.end.isoWeekday()).to.equal(7);
-      expect(this.range.start.date(), 'start date').to.equal(3);
-      expect(this.range.end.date(), 'end date').to.equal(9);
+      expect(range.start.isoWeekday()).to.equal(1);
+      expect(range.end.isoWeekday()).to.equal(7);
+      expect(range.start.date(), 'start date').to.equal(3);
+      expect(range.end.date(), 'end date').to.equal(9);
     });
 
     it('about the previous 4 days', function () {
-      this.range.units = 4;
-      this.range.measure = 'days';
+      const range = this.range.previous(4, 'days');
 
-      expect(this.range.start.day()).to.equal(6);
-      expect(this.range.end.day()).to.equal(2);
-      expect(this.range.start.date(), 'start date').to.equal(8);
-      expect(this.range.end.date(), 'end date').to.equal(11);
+      expect(range.start.day()).to.equal(6);
+      expect(range.end.day()).to.equal(2);
+      expect(range.start.date(), 'start date').to.equal(8);
+      expect(range.end.date(), 'end date').to.equal(11);
     });
 
     it('quarter', function () {
-      this.range.measure = 'quarter';
+      const range = this.range.previous(1, 'quarter');
 
-      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('2999-10-01');
-      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('2999-12-31');
+      expect(range.start.format(DAY_FORMAT), 'start date').to.equal('2999-10-01');
+      expect(range.end.format(DAY_FORMAT), 'end date').to.equal('2999-12-31');
     });
   });
 
@@ -237,10 +239,9 @@ describe('RelativeRange', function () {
     });
 
     it('should return the length in days', function () {
-      this.range.units = 2;
-      this.range.measure = 'weeks';
+      const range = this.range.previous(2, 'week', false);
 
-      expect(this.range.length).to.equal(14);
+      expect(range.length).to.equal(14);
     });
 
     it('should return the dates in whole days', function () {
@@ -249,30 +250,28 @@ describe('RelativeRange', function () {
     });
 
     it('about the previous 2 months', function () {
-      this.range.units = 2;
-      this.range.measure = 'months';
+      const range = this.range.previous(2, 'months', false);
 
-      expect(this.range.start.format(DAY_FORMAT), 'start date').to.equal('2999-12-12');
-      expect(this.range.end.format(DAY_FORMAT), 'end date').to.equal('3000-02-11');
+      expect(range.start.format(DAY_FORMAT), 'start date').to.equal('2999-12-12');
+      expect(range.end.format(DAY_FORMAT), 'end date').to.equal('3000-02-11');
     });
 
     it('about the previous ISO week', function () {
-      this.range.measure = 'isoWeek';
+      const range = this.range.previous(1, 'isoWeek', false);
 
-      expect(this.range.start.isoWeekday()).to.equal(3);
-      expect(this.range.end.isoWeekday()).to.equal(2);
-      expect(this.range.start.date(), 'start date').to.equal(5);
-      expect(this.range.end.date(), 'end date').to.equal(11);
+      expect(range.start.isoWeekday()).to.equal(3);
+      expect(range.end.isoWeekday()).to.equal(2);
+      expect(range.start.date(), 'start date').to.equal(5);
+      expect(range.end.date(), 'end date').to.equal(11);
     });
 
     it('about the previous 4 days', function () {
-      this.range.units = 4;
-      this.range.measure = 'days';
+      const range = this.range.previous(4, 'days', false);
 
-      expect(this.range.start.day()).to.equal(6);
-      expect(this.range.end.day()).to.equal(2);
-      expect(this.range.start.date(), 'start date').to.equal(8);
-      expect(this.range.end.date(), 'end date').to.equal(11);
+      expect(range.start.day()).to.equal(6);
+      expect(range.end.day()).to.equal(2);
+      expect(range.start.date(), 'start date').to.equal(8);
+      expect(range.end.date(), 'end date').to.equal(11);
     });
   });
 
@@ -432,7 +431,7 @@ describe('RelativeRange', function () {
         this.range.start = new Date(2000, 0, 1);
         this.range.start = null;
 
-        expect(this.range.start.format(DAY_FORMAT)).to.equal('3000-01-01');
+        expect(this.range.start.format(DAY_FORMAT)).to.equal('3000-02-12');
       });
 
       it('should never be larger than the end date', function () {
@@ -469,7 +468,7 @@ describe('RelativeRange', function () {
         this.range.end = new Date(2000, 0, 1);
         this.range.end = null;
 
-        expect(this.range.end.format(DAY_FORMAT)).to.equal('3000-01-31');
+        expect(this.range.end.format(DAY_FORMAT)).to.equal('3000-02-12');
       });
 
       it('should be returned in toJSON if set and requested', function () {
@@ -483,9 +482,10 @@ describe('RelativeRange', function () {
 
   describe('.minimumStart', function () {
     it('should maximize the start date', function () {
-      this.range.minimumStart = new Date(3000, 0, 22);
+      const range = this.range.previous(1, 'month');
+      range.minimumStart = new Date(3000, 0, 22);
 
-      expect(this.range.start.format(DAY_FORMAT)).to.equal('3000-01-22');
+      expect(range.start.format(DAY_FORMAT)).to.equal('3000-01-22');
     });
 
     it('should never be larger than the end date', function () {
@@ -496,9 +496,10 @@ describe('RelativeRange', function () {
     });
 
     it('should never be outside the range', function () {
-      this.range.minimumStart = new Date(2000, 0, 15);
+      const range = this.range.previous(1, 'month');
+      range.minimumStart = new Date(2000, 0, 15);
 
-      expect(this.range.start.format(DAY_FORMAT)).to.equal('3000-01-01');
+      expect(range.start.format(DAY_FORMAT)).to.equal('3000-01-01');
     });
 
     it('should be returned in toJSON', function () {
@@ -596,11 +597,11 @@ describe('RelativeRange', function () {
     });
 
     it('affects static format', function () {
-      expect(this.range.locale('fr').format()).to.equal('1 - 31 janv. 3000');
+      expect(this.range.previous(1, 'month').locale('fr').format()).to.equal('1 - 31 janv. 3000');
     });
 
     it('affects relative format', function () {
-      expect(this.range.locale('nl').format('R')).to.equal('vorige maand');
+      expect(this.range.locale('nl').format('R')).to.equal('deze dag');
     });
   });
 });
