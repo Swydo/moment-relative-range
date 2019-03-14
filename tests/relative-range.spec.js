@@ -18,6 +18,10 @@ describe('RelativeRange', function () {
     expect(this.range.length).to.be.a('number');
   });
 
+  it('should be a relative range object', function () {
+    expect(this.range.isARelativeRangeObject()).to.equal(true);
+  });
+
   describe('defaults', function () {
     it('should have units 1', function () {
       expect(this.range.units).to.equal(1);

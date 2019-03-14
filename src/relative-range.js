@@ -384,6 +384,10 @@ class RelativeRange {
   toArray(format?: string = DAY_FORMAT): string[] {
     return [this.start.format(format), this.end.format(format)];
   }
+
+  isARelativeRangeObject(): boolean {
+    return true;
+  }
 }
 
 Object.keys(rangeSchema).forEach((attr) => {
