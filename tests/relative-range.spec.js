@@ -19,7 +19,7 @@ describe('RelativeRange', function () {
   });
 
   it('should be a relative range object', function () {
-    expect(this.range.isARelativeRangeObject()).to.equal(true);
+    expect(this.range._isARelativeRangeObject).to.equal(true);
   });
 
   describe('defaults', function () {
