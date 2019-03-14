@@ -86,11 +86,16 @@ const rangeSchema = {
   minimumStart: {
     type: Date,
   },
+  // eslint-disable-next-line no-underscore-dangle
+  _isARelativeRangeObject: {
+    type: Boolean,
+    default: true,
+  },
 };
 
 type RangeSchemaType = {
   type: RangeSchemaTypeEnum;
-  default?: number | string;
+  default?: number | string | boolean;
   enum?: string[];
   calculate?: (value: any) => mixed;
 }

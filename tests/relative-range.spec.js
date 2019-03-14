@@ -18,6 +18,11 @@ describe('RelativeRange', function () {
     expect(this.range.length).to.be.a('number');
   });
 
+  it('should be a relative range object', function () {
+    // eslint-disable-next-line no-underscore-dangle
+    expect(this.range._isARelativeRangeObject).to.equal(true);
+  });
+
   describe('defaults', function () {
     it('should have units 1', function () {
       expect(this.range.units).to.equal(1);
