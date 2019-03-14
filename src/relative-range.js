@@ -95,7 +95,7 @@ const rangeSchema = {
 
 type RangeSchemaType = {
   type: RangeSchemaTypeEnum;
-  default?: number | string;
+  default?: number | string | boolean;
   enum?: string[];
   calculate?: (value: any) => mixed;
 }
