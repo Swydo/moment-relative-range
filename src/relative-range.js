@@ -86,6 +86,7 @@ const rangeSchema = {
   minimumStart: {
     type: Date,
   },
+  // eslint-disable-next-line no-underscore-dangle
   _isARelativeRangeObject: {
     type: Boolean,
     default: true,

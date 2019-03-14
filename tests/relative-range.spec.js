@@ -19,6 +19,7 @@ describe('RelativeRange', function () {
   });
 
   it('should be a relative range object', function () {
+    // eslint-disable-next-line no-underscore-dangle
     expect(this.range._isARelativeRangeObject).to.equal(true);
   });
 
