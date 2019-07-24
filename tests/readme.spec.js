@@ -13,26 +13,26 @@ function transformer(text) {
 
 function makeComment(text) {
   return text.split('\n')
-        .map(line => `// ${line}`)
-        .join('\n');
+    .map(line => `// ${line}`)
+    .join('\n');
 }
 
 function parseReadMe(readme) {
   const examples = readme.split('\n```js')
-        .map((part, i) => {
-          let text;
+    .map((part, i) => {
+      let text;
 
-          if (i === 0) {
-            text = makeComment(part);
-          } else {
-            const parts = part.split('\n```');
-            const code = parts[0];
-            const comment = makeComment(parts[1]);
+      if (i === 0) {
+        text = makeComment(part);
+      } else {
+        const parts = part.split('\n```');
+        const code = parts[0];
+        const comment = makeComment(parts[1]);
 
-            text = `${code}\n${comment}`;
-          }
-          return text;
-        });
+        text = `${code}\n${comment}`;
+      }
+      return text;
+    });
 
   return examples.join('\n// ```javascript');
 }
