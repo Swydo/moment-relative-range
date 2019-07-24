@@ -5,12 +5,12 @@
   "main": "lib/relative-range.js",
   "scripts": {
     "build": "babel src -d lib && require-self",
-    "cover": "istanbul cover --report lcovonly _mocha -- -R spec --compilers js:babel-core/register './tests/**/*.js'",
+    "cover": "istanbul cover --report lcovonly _mocha -- -R spec --require babel-core/register './tests/**/*.js'",
     "coverage": "npm run cover && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "doctoc": "doctoc --title=**Contents** README.md",
     "flow": "flow check",
     "lint": "eslint ./src ./tests",
-    "mocha": "npm run build -s && _mocha -R spec --compilers js:babel-core/register './tests/**/*.js'",
+    "mocha": "npm run build -s && _mocha -R spec --require babel-core/register './tests/**/*.js'",
     "prepublish": "npm test -s && npm run doctoc -s",
     "start": "npm run build -s -- -w",
     "test": "npm run mocha"
