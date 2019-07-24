@@ -1,15 +1,11 @@
 // @flow
 import moment from 'moment';
 import { formatRelative, formatStatic } from './format';
+import type { FormatStaticOptionsType } from './types';
 
 export const DAY_FORMAT = 'YYYY-MM-DD';
 
 type RangeSchemaTypeEnum = typeof Date | typeof String | typeof Number | typeof Boolean;
-
-export type FormatStaticOptionsType = {
-  attemptYearHiding?: boolean;
-  attemptDayHiding?: boolean;
-}
 
 function isDateType(Type: RangeSchemaTypeEnum): boolean {
   return Object.prototype.toString.call(new Type()) === '[object Date]';

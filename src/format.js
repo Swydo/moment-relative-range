@@ -1,6 +1,6 @@
 // @flow
 import moment from 'moment';
-import type { FormatStaticOptionsType } from './relative-range';
+import type { FormatStaticOptionsType } from './types';
 
 const REMOVE_DAY_REGEX = /([^MY]*)D([^MY,]*)/;
 const REMOVE_MONTH_REGEX = /([^D.]*)(M+)([^D.]*)/;
