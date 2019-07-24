@@ -5,6 +5,7 @@ Calculate a date range relative to a certain moment.
 
 [![Build status](https://api.travis-ci.org/Swydo/moment-relative-range.png)](https://travis-ci.org/Swydo/moment-relative-range)
 [![Coverage Status](https://coveralls.io/repos/github/Swydo/moment-relative-range/badge.svg)](https://coveralls.io/github/Swydo/moment-relative-range)
+[![Greenkeeper badge](https://badges.greenkeeper.io/Swydo/moment-relative-range.svg)](https://greenkeeper.io/)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->

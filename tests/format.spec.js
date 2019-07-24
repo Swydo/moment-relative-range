@@ -449,11 +449,11 @@ describe('RelativeRange#format', function () {
 
   translations.forEach((translation) => {
     const {
-        range: localeRange,
-        format,
-        locales,
-        options,
-      } = translation;
+      range: localeRange,
+      format,
+      locales,
+      options,
+    } = translation;
 
     moment.locale('en');
     const englishFormat = localeRange.format(format);

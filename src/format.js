@@ -1,6 +1,6 @@
 // @flow
 import moment from 'moment';
-import type { FormatStaticOptionsType } from './relative-range';
+import type { FormatStaticOptionsType } from './types';
 
 const REMOVE_DAY_REGEX = /([^MY]*)D([^MY,]*)/;
 const REMOVE_MONTH_REGEX = /([^D.]*)(M+)([^D.]*)/;
@@ -59,26 +59,26 @@ moment.updateLocale('en', {
 const cleanFormat = (format, regex, bool = true) => (bool ? format.replace(regex, '') : format);
 
 const formatStatic = (
-    range: StaticRangeInput,
-    format: string = 'll',
-    options: FormatStaticOptionsType = {},
+  range: StaticRangeInput,
+  format: string = 'll',
+  options: FormatStaticOptionsType = {},
 ) => {
   const {
-      date,
-      start,
-      end,
-      locale = moment.locale(),
-    } = range;
+    date,
+    start,
+    end,
+    locale = moment.locale(),
+  } = range;
   const localMoment = moment().locale(locale);
 
   const {
-      separator = '-',
-      otherYear: otherYearConfig = '%s YYYY',
-      // eslint-disable-next-line no-underscore-dangle
+    separator = '-',
+    otherYear: otherYearConfig = '%s YYYY',
+    // eslint-disable-next-line no-underscore-dangle
   } = localMoment.localeData()._config.staticRange || DEFAULT_STATIC_RANGE_LOCALE;
   const {
-      attemptYearHiding = false,
-      attemptDayHiding = false,
+    attemptYearHiding = false,
+    attemptDayHiding = false,
   } = options;
 
   const result = [];
@@ -91,8 +91,8 @@ const formatStatic = (
   const year = date ? moment(date).year() : moment().year();
   const startThisYear = start.year() === year;
   const endThisYear = end.year() === year;
-  const hideDay = attemptDayHiding && isReadable &&
-    start.date() === 1 && end.date() === end.daysInMonth();
+  const hideDay = attemptDayHiding && isReadable
+    && start.date() === 1 && end.date() === end.daysInMonth();
 
   const longDateFormat = isReadable
     ? cleanFormat(localMoment.localeData().longDateFormat(format), REMOVE_DAY_REGEX, hideDay)
@@ -151,10 +151,10 @@ const formatRelative = (
   format: string = 'RR',
 ) => {
   const {
-      count,
-      measure,
-      locale = moment.locale(),
-    } = range;
+    count,
+    measure,
+    locale = moment.locale(),
+  } = range;
   const localMoment = moment().locale(locale);
 
   // eslint-disable-next-line no-underscore-dangle
@@ -182,6 +182,6 @@ const formatRelative = (
 };
 
 export {
-    formatStatic,
-    formatRelative,
+  formatStatic,
+  formatRelative,
 };

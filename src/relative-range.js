@@ -1,15 +1,11 @@
 // @flow
 import moment from 'moment';
 import { formatRelative, formatStatic } from './format';
+import type { FormatStaticOptionsType } from './types';
 
 export const DAY_FORMAT = 'YYYY-MM-DD';
 
 type RangeSchemaTypeEnum = typeof Date | typeof String | typeof Number | typeof Boolean;
-
-export type FormatStaticOptionsType = {
-  attemptYearHiding?: boolean;
-  attemptDayHiding?: boolean;
-}
 
 function isDateType(Type: RangeSchemaTypeEnum): boolean {
   return Object.prototype.toString.call(new Type()) === '[object Date]';
@@ -124,21 +120,28 @@ export type RelativeRangeJsonOptionsType = {
 }
 
 class RelativeRange {
-
   units: number;
+
   measure: string;
+
   type: RangeTypeEnum;
+
   whole: boolean;
+
   margin: number;
+
   start: moment.Moment;
+
   end: moment.Moment;
+
   date: moment.Moment | string;
+
   minimumStart: moment.Moment;
 
   data: RelativeRangeOptionsType;
 
   get start(): moment.Moment {
-    const end = this.end;
+    const { end } = this;
 
     if (this.data.start) {
       return moment.min(moment(this.data.start), end);
@@ -182,6 +185,7 @@ class RelativeRange {
       case RANGE_TYPES.next:
         change = 'add';
         move = 'endOf';
+        // eslint-disable-next-line prefer-destructuring
         units = this.units;
         measure = this.countableMeasure;
         break;
@@ -200,7 +204,7 @@ class RelativeRange {
       )[change](
         units, measure,
       )
-      .endOf(this.cleanMeasure);
+        .endOf(this.cleanMeasure);
     } else {
       end[change](this.margin, RANGE_MEASURES.day);
     }
@@ -239,7 +243,7 @@ class RelativeRange {
   // If something is `current`, then it isn't whole by default.
   // Can be manually overruled for things that aren't a day.
   isWhole(): boolean {
-    const whole = this.data.whole;
+    const { whole } = this.data;
     return this.cleanMeasure === RANGE_MEASURES.day || (whole != null ? whole : !this.isToDate());
   }
 
