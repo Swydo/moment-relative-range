@@ -1,7 +1,5 @@
 language: node_js
 node_js:
-  - "4"
-  - "6"
   - "8"
   - "node"
 before_install: if [[ `npm -v` < 3* ]]; then npm i -g npm@3; fi
