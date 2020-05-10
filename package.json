@@ -53,7 +53,7 @@
     "flow-bin": "^0.123.0",
     "istanbul": "^1.0.0-alpha.2",
     "mocha": "^7.0.1",
-    "moment": "2.24.0",
+    "moment": "2.25.3",
     "moment-range": "^4.0.2",
     "require-self": "^0.2.1"
   },
